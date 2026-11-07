@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Статистика публикаций</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .chart-card {
+            min-height: 380px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 290px;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <header class="bg-dark text-white py-4">
+        <div class="container">
+            <h1 class="display-5 fw-bold mb-1">НОВОСТИ ONLINE</h1>
+            <p class="lead mb-0">Актуальные новости и интересные статьи</p>
+        </div>
+    </header>
+
+    <nav class="navbar bg-white border-bottom">
+        <div class="container">
+            <a href="/" class="nav-link text-dark">Главная</a>
+            <a href="/statistics/" class="nav-link text-primary fw-bold">
+                Статистика
+            </a>
+        </div>
+    </nav>
+
+    <main class="container py-4 mb-5 flex-grow-1">
+
+        <h2 class="fw-bold mb-2">Статистика публикаций</h2>
+        <p class="text-muted mb-4">
+            Анализ публикационной активности онлайн-издания
+        </p>
+
+        <div class="row g-4">
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0 p-3 chart-card">
+                    <h5 class="fw-bold text-center">
+                        Публикации по категориям
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="categoriesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0 p-3 chart-card">
+                    <h5 class="fw-bold text-center">
+                        Публикации по авторам
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="authorsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0 p-3 chart-card">
+                    <h5 class="fw-bold text-center">
+                        Динамика создания публикаций
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="datesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0 p-3 chart-card">
+                    <h5 class="fw-bold text-center">
+                        Публикации по статусам
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="statusesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-1 fw-bold">НОВОСТИ ONLINE</p>
+            <p class="small text-secondary mb-0">
+                © Онлайн-издание. Все права защищены.
+            </p>
+        </div>
+    </footer>
+
+    {{ categories|json_script:"categories-data" }}
+    {{ authors|json_script:"authors-data" }}
+    {{ dates|json_script:"dates-data" }}
+    {{ statuses|json_script:"statuses-data" }}
+
+    <script>
+        const categories = JSON.parse(
+            document.getElementById('categories-data').textContent
+        );
+
+        const authors = JSON.parse(
+            document.getElementById('authors-data').textContent
+        );
+
+        const dates = JSON.parse(
+            document.getElementById('dates-data').textContent
+        );
+
+        const statuses = JSON.parse(
+            document.getElementById('statuses-data').textContent
+        );
+
+        // Диаграмма публикаций по категориям
+        new Chart(document.getElementById('categoriesChart'), {
+            type: 'pie',
+            data: {
+                labels: categories.map(item => item.category__category_name),
+                datasets: [{
+                    data: categories.map(item => item.total)
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Диаграмма публикаций по авторам
+        new Chart(document.getElementById('authorsChart'), {
+            type: 'bar',
+            data: {
+                labels: authors.map(
+                    item => item.author__first_name + ' ' +
+                            item.author__last_name
+                ),
+                datasets: [{
+                    label: 'Количество публикаций',
+                    data: authors.map(item => item.total)
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        // Динамика создания публикаций
+        new Chart(document.getElementById('datesChart'), {
+            type: 'line',
+            data: {
+                labels: dates.map(item => item.day),
+                datasets: [{
+                    label: 'Количество публикаций',
+                    data: dates.map(item => item.total),
+                    tension: 0.3,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        // Диаграмма публикаций по статусам
+        new Chart(document.getElementById('statusesChart'), {
+            type: 'doughnut',
+            data: {
+                labels: statuses.map(item => item.status),
+                datasets: [{
+                    data: statuses.map(item => item.total)
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ article.title }}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+
+<body class="bg-light d-flex flex-column min-vh-100">
+
+    <header class="bg-dark text-white py-4">
+        <div class="container">
+            <h1 class="display-5 fw-bold mb-1">НОВОСТИ ONLINE</h1>
+            <p class="lead mb-0">Актуальные новости и интересные статьи</p>
+        </div>
+    </header>
+
+    <nav class="navbar bg-white border-bottom">
+        <div class="container">
+            <a href="/" class="nav-link text-dark">Главная</a>
+        </div>
+    </nav>
+
+    <main class="container py-4 mb-5 flex-grow-1">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+
+                <article class="card shadow-sm border-0">
+
+                    {% with image=article.image_set.first %}
+                        {% if image and image.image_file %}
+                            <img src="{{ image.image_file.url }}"
+                                 class="card-img-top"
+                                 alt="{{ image.alt_text }}"
+                                 style="max-height: 450px; object-fit: cover;">
+                        {% endif %}
+                    {% endwith %}
+
+                    <div class="card-body p-4 p-md-5">
+
+                        <h1 class="fw-bold mb-3">
+                            {{ article.title }}
+                        </h1>
+
+                        <p class="text-muted small">
+                            Дата публикации:
+                            {{ article.published_at|date:"d.m.Y H:i" }}
+                        </p>
+
+                        <hr class="my-4">
+
+                        <p class="lead">
+                            {{ article.short_description }}
+                        </p>
+
+                        <div class="fs-5 lh-lg">
+                            {{ article.content|linebreaks }}
+                        </div>
+
+                        <a href="/" class="btn btn-primary mt-4">
+                            Вернуться к публикациям
+                        </a>
+
+                    </div>
+                </article>
+
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-1 fw-bold">НОВОСТИ ONLINE</p>
+            <p class="small text-secondary mb-0">
+                © Онлайн-издание. Все права защищены.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -113,11 +113,11 @@ class Author(models.Model):
         blank=True,
         verbose_name='Биография'
     )
-    photo_url = models.CharField(
-        max_length=500,
+    photo = models.ImageField(
+        upload_to='authors/',
         null=True,
         blank=True,
-        verbose_name='Ссылка на фотографию'
+        verbose_name='Фотография автора'
     )
     created_by = models.ForeignKey(
         User,

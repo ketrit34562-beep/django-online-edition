@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Удаление публикации</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@400;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --paper: #F7F4EB;
+            --paper-light: #FCFAF5;
+            --paper-deep: #EFECE4;
+            --ink: #262522;
+            --muted: #777168;
+            --burgundy: #802520;
+            --burgundy-dark: #651B18;
+            --line: #DED8CC;
+            --header: #1E2229;
+            --graphite: #5C626D;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            background: var(--paper);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: "PT Sans", Arial, sans-serif;
+        }
+
+        /* Шапка сайта */
+
+        .site-header {
+            background: var(--header);
+            color: #F8F5EE;
+            padding: 27px 0 24px;
+            border-bottom: 3px double #D5CEC0;
+        }
+
+        .site-header h1 {
+            margin: 0 0 3px;
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: 0.045em;
+        }
+
+        .site-header p {
+            margin: 0;
+            color: #D4D0C8;
+            font-size: 0.98rem;
+        }
+
+        /* Навигация */
+
+        .site-nav {
+            background: #F9F7F2;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .site-nav .nav-inner {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .site-nav .nav-link {
+            display: inline-block;
+            padding: 13px 0 11px;
+            color: var(--ink);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            font-size: 0.95rem;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .site-nav .nav-link:hover,
+        .site-nav .nav-link:focus {
+            color: var(--burgundy);
+            border-bottom-color: var(--burgundy);
+        }
+
+        /* Основная часть */
+
+        main {
+            width: 100%;
+            flex: 1 0 auto;
+            padding: 65px 0;
+        }
+
+        .confirmation-wrapper {
+            width: min(100% - 32px, 650px);
+            margin-inline: auto;
+        }
+
+        /* Карточка удаления */
+
+        .confirmation-card {
+            padding: 36px 34px;
+            background: var(--paper-light);
+            border: 1px solid var(--line);
+            border-top: 3px solid var(--burgundy);
+            border-radius: 3px;
+            box-shadow: 0 8px 25px rgba(38, 37, 34, 0.07);
+            text-align: center;
+        }
+
+        .card-label {
+            margin: 0 0 8px;
+            color: var(--burgundy);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .confirmation-title {
+            margin: 0 0 22px;
+            color: var(--ink);
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: clamp(2.2rem, 5vw, 2.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .confirmation-text {
+            margin: 0 0 18px;
+            color: #514B43;
+            font-family: "PT Serif", Georgia, serif;
+            font-size: 1.08rem;
+            line-height: 1.6;
+        }
+
+        /* Название публикации */
+
+        .article-name {
+            margin: 0 0 20px;
+            padding: 17px 20px;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            color: var(--burgundy);
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+        }
+
+        /* Предупреждение */
+
+        .warning-text {
+            margin: 0 0 28px;
+            color: var(--burgundy);
+            font-family: "PT Serif", Georgia, serif;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        /* Кнопки */
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn-editorial {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 45px;
+            padding: 11px 22px;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            font-family: "PT Sans", Arial, sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s ease,
+                        border-color 0.2s ease,
+                        color 0.2s ease;
+        }
+
+        .btn-delete {
+            background: var(--burgundy);
+            border-color: var(--burgundy);
+            color: #FFFAF2;
+        }
+
+        .btn-delete:hover,
+        .btn-delete:focus {
+            background: var(--burgundy-dark);
+            border-color: var(--burgundy-dark);
+            color: #FFFAF2;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border-color: var(--graphite);
+            color: var(--graphite);
+        }
+
+        .btn-cancel:hover,
+        .btn-cancel:focus {
+            background: var(--graphite);
+            border-color: var(--graphite);
+            color: #FFFFFF;
+        }
+
+        /* Подвал */
+
+        .site-footer {
+            margin-top: auto;
+            padding: 27px 0;
+            background: var(--paper-deep);
+            border-top: 1px solid #DCD5C7;
+            color: #222222;
+            text-align: center;
+        }
+
+        .site-footer .footer-name {
+            margin-bottom: 4px;
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .site-footer .footer-copy {
+            margin: 0;
+            color: #746F67;
+            font-size: 0.82rem;
+        }
+
+        /* Адаптация для мобильных устройств */
+
+        @media (max-width: 576px) {
+
+            main {
+                padding: 40px 0;
+            }
+
+            .confirmation-card {
+                padding: 28px 20px;
+            }
+
+            .confirmation-title {
+                font-size: 2.2rem;
+            }
+
+            .article-name {
+                font-size: 1.4rem;
+            }
+
+            .site-nav .nav-inner {
+                gap: 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-editorial {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Шапка сайта -->
+
+    <header class="site-header">
+        <div class="container">
+            <h1>СТАРЫЕ СТАРОСТИ</h1>
+            <p>Авторские материалы и тематические истории</p>
+        </div>
+    </header>
+
+    <!-- Навигация -->
+
+    <nav class="site-nav">
+        <div class="container">
+            <div class="nav-inner">
+
+                <a href="/" class="nav-link">
+                    Главная
+                </a>
+
+                <a href="{% url 'article_manage' %}" class="nav-link">
+                    Управление публикациями
+                </a>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основная часть -->
+
+    <main>
+
+        <div class="confirmation-wrapper">
+
+            <div class="confirmation-card">
+
+                <p class="card-label">
+                    Редакционный архив
+                </p>
+
+                <h2 class="confirmation-title">
+                    Удаление публикации
+                </h2>
+
+                <p class="confirmation-text">
+                    Вы действительно хотите удалить публикацию?
+                </p>
+
+                <div class="article-name">
+                    «{{ article.title }}»
+                </div>
+
+                <p class="warning-text">
+                    Это действие нельзя отменить.
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="action-buttons">
+
+                        <button type="submit" class="btn-editorial btn-delete">
+                            Да, удалить
+                        </button>
+
+                        <a href="{% url 'article_manage' %}"
+                           class="btn-editorial btn-cancel">
+                            Отмена
+                        </a>
+
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Подвал -->
+
+    <footer class="site-footer">
+        <div class="container">
+
+            <p class="footer-name">
+                СТАРЫЕ СТАРОСТИ
+            </p>
+
+            <p class="footer-copy">
+                © Онлайн-издание. Все права защищены.
+            </p>
+
+        </div>
+    </footer>
+
+</body>
+</html>

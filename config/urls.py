@@ -18,6 +18,28 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import get_user_model
+
+
+# Функция для автоматического входа без пароля при локальной разработке
+def auto_login_admin(request):
+    if not request.user.is_authenticated:
+        User = get_user_model()
+        # Сначала пытаемся найти вашего пользователя admin_editor
+        admin_user = User.objects.filter(username='admin_editor').first()
+
+        # Если такого нет, берем любого администратора из базы данных
+        if not admin_user:
+            admin_user = User.objects.filter(is_superuser=True).first() or User.objects.filter(is_staff=True).first()
+
+        if admin_user:
+            request.user = admin_user
+    return True
+
+
+# Отключаем защитную форму логина Django только в режиме отладки (DEBUG = True)
+if settings.DEBUG:
+    admin.site.has_permission = auto_login_admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),

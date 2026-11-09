@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Управление публикациями — СТАРЫЕ СТАРОСТИ</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+    :root {
+        --paper: #F7F4EB;
+        --paper-card: #FCFAF5;
+        --paper-light: #F9F7F2;
+
+        --ink: #222222;
+        --muted: #746F67;
+
+        --accent: #802520;
+        --accent-dark: #651B18;
+
+        --line: #DED8CC;
+        --soft: #EEE5DC;
+    }
+
+    body{
+        background:var(--paper);
+        color:var(--ink);
+        font-family:"PT Sans", Arial, sans-serif;
+        min-height:100vh;
+        display:flex;
+        flex-direction:column;
+    }
+
+    /* =========================
+       ШАПКА
+    ========================= */
+
+    header{
+        background:#1E2229!important;
+        color:#F9F7F2;
+        padding:38px 0 32px;
+        border-bottom:3px double #D5CEC0;
+    }
+
+    header h1{
+        font-family:Georgia,"Times New Roman",serif;
+        font-weight:700;
+    }
+
+    header p{
+        color:#D8D1C6;
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:1.1rem;
+    }
+
+    /* =========================
+       НАВИГАЦИЯ
+    ========================= */
+
+    .navbar > .container,
+    .site-nav > .container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+    }
+
+    /* Сама полоса навигации — компактная по высоте */
+    .navbar,
+    .site-nav {
+        background-color: rgba(249, 247, 242, 0.97) !important;
+        border-bottom: 1px solid #DED8CC !important;
+        padding: 8px 0 !important;
+    }
+
+    .navbar .nav-link,
+    .site-nav .nav-link {
+        padding: 7px 14px !important;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #39342F !important;
+        border-radius: 5px;
+        white-space: nowrap;
+    }
+
+    .navbar .nav-link:hover,
+    .site-nav .nav-link:hover {
+        background-color: #EFECE4;
+        color: #802520 !important;
+    }
+
+    /* Активная вкладка («Управление публикациями») */
+    .navbar .nav-link.active,
+    .site-nav .nav-link.active {
+        background-color: transparent;
+        color: #802520 !important;
+        font-weight: 700;
+        box-shadow: inset 0 -2px 0 #802520;
+        border-radius: 0;
+    }
+
+    /* =========================
+       ЗАГОЛОВОК
+    ========================= */
+
+    h2{
+        font-family:"Cormorant Garamond", serif;
+        font-size:3rem;
+        font-weight:700;
+        margin:0;
+    }
+
+    /* =========================
+       КНОПКА ДОБАВИТЬ
+    ========================= */
+
+    .btn-primary{
+        background:#802520!important;
+        border-color:#802520!important;
+        font-weight:600;
+    }
+
+    .btn-primary:hover{
+        background:#651B18!important;
+        border-color:#651B18!important;
+    }
+
+    /* =========================
+       ТАБЛИЦА
+    ========================= */
+
+    .card{
+        background:#FCFAF5;
+        border:1px solid #DED8CC!important;
+        border-radius:8px;
+        box-shadow:none!important;
+        overflow:hidden;
+    }
+
+    .table{
+        margin-bottom:0;
+        background:#FCFAF5;
+    }
+
+    .table thead{
+        background:#EFECE4;
+    }
+
+    .table thead th{
+        background:#EFECE4!important;
+        color:#262522!important;
+        border-bottom:1px solid #DED8CC!important;
+        font-weight:700;
+        vertical-align:middle;
+    }
+
+    .table tbody tr{
+        background:#FCFAF5;
+    }
+
+    .table tbody td{
+        border-color:#E8E1D5;
+        vertical-align:middle;
+    }
+
+    /* =========================
+       ЗАГОЛОВОК СТАТЬИ
+    ========================= */
+
+    .table tbody td:nth-child(2){
+        font-family:"PT Serif", serif;
+        font-size:1.05rem;
+        font-weight:700;
+    }
+
+    /* =========================
+       СТАТУС
+    ========================= */
+
+    .badge{
+        background:#E6D8C3!important;
+        color:#7A4E22!important;
+        font-weight:600;
+        border:1px solid #D6C2A1;
+    }
+
+    /* =========================
+       ДЕЙСТВИЯ
+    ========================= */
+
+    .table tbody td:last-child{
+        white-space:nowrap;
+    }
+
+    .btn-sm{
+        margin-right:4px;
+    }
+
+    .btn-outline-primary{
+        color:#5C626D!important;
+        border-color:#5C626D!important;
+    }
+
+    .btn-outline-primary:hover{
+        background:#5C626D!important;
+        color:#fff!important;
+        border-color:#5C626D!important;
+    }
+
+    .btn-outline-warning{
+        color:#8C6239!important;
+        border-color:#8C6239!important;
+        background:transparent!important;
+    }
+
+    .btn-outline-warning:hover{
+        background:#8C6239!important;
+        color:#fff!important;
+        border-color:#8C6239!important;
+    }
+
+    a[href*="delete"]{
+        color:#802520!important;
+        border:1px solid #802520!important;
+        background:transparent!important;
+    }
+
+    a[href*="delete"]:hover{
+        background:#802520!important;
+        color:#fff!important;
+    }
+
+    /* =========================
+       ALERT
+    ========================= */
+
+    .alert-info{
+        background:#EEE8DE;
+        border:1px solid #DDD1C1;
+        border-left:3px solid #802520;
+        color:#55483D;
+    }
+
+    /* =========================
+       ПОДВАЛ
+    ========================= */
+
+    footer{
+        margin-top:auto;
+        background:#EFECE4;
+        border-top:1px solid #DCD5C7;
+        color:#39342F;
+    }
+
+    footer .text-secondary{
+        color:#746F67!important;
+    }
+
+    @media(max-width:992px){
+
+        h2{
+            font-size:2.3rem;
+        }
+
+        .table{
+            min-width:900px;
+        }
+    }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <h1 class="fw-bold">СТАРЫЕ СТАРОСТИ</h1>
+            <p class="mb-0">Авторские материалы и тематические истории</p>
+        </div>
+    </header>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+
+            <a href="/" class="nav-link">
+                Главная
+            </a>
+
+            <a href="{% url 'article_manage' %}" class="nav-link active">
+                Управление публикациями
+            </a>
+
+        </div>
+    </nav>
+
+    <main class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h2>Все публикации</h2>
+
+            <a href="{% url 'article_create' %}" class="btn btn-primary">
+                + Добавить публикацию
+            </a>
+
+        </div>
+
+        {% if articles %}
+            <div class="card">
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Заголовок</th>
+                                <th>Автор</th>
+                                <th>Категория</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for article in articles %}
+
+                                <tr>
+
+                                    <td>{{ article.article_id }}</td>
+
+                                    <td>{{ article.title }}</td>
+
+                                    <td>
+                                        {{ article.author.first_name }}
+                                        {{ article.author.last_name }}
+                                    </td>
+
+                                    <td>
+                                        {{ article.category.category_name }}
+                                    </td>
+
+                                    <td>
+                                        <span class="badge">
+                                            {{ article.status }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+
+                                        <a href="{% url 'article_detail' article.article_id %}"
+                                           class="btn btn-sm btn-outline-primary">
+                                            Просмотр
+                                        </a>
+
+                                        <a href="{% url 'article_edit' article.article_id %}"
+                                           class="btn btn-sm btn-outline-warning">
+                                            Изменить
+                                        </a>
+
+                                        <a href="{% url 'article_delete' article.article_id %}"
+                                           class="btn btn-sm">
+                                            Удалить
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div class="alert alert-info">
+                Публикаций пока нет.
+            </div>
+
+        {% endif %}
+
+    </main>
+
+    <footer class="py-4">
+
+        <div class="container text-center">
+
+            <p class="mb-1 fw-bold">
+                СТАРЫЕ СТАРОСТИ
+            </p>
+
+            <p class="small text-secondary mb-0">
+                © Онлайн-издание. Все права защищены.
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

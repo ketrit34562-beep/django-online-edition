@@ -9,76 +9,623 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@400;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --paper: #F7F4EB;
+            --paper-light: #FCFAF5;
+            --paper-deep: #EFECE4;
+            --ink: #262522;
+            --muted: #777168;
+            --burgundy: #802520;
+            --burgundy-dark: #651C19;
+            --line: #DED8CC;
+            --header: #1E2229;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            background: var(--paper);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: "PT Sans", Arial, sans-serif;
+        }
+
+        .site-header {
+            background: var(--header);
+            color: #F8F5EE;
+            padding: 27px 0 24px;
+            border-bottom: 3px double #D5CEC0;
+        }
+
+        .site-header h1 {
+            margin: 0 0 3px;
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: 0.045em;
+        }
+
+        .site-header p {
+            margin: 0;
+            color: #D4D0C8;
+            font-size: 0.98rem;
+        }
+
+        .site-nav {
+            background-color: rgba(249, 247, 242, 0.97);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 10px rgba(45, 35, 25, 0.045);
+            border-bottom: 1px solid var(--line);
+            padding: 8px 0;
+        }
+
+        .site-nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+        }
+
+        .site-nav .nav-link {
+            display: inline-block;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            padding: 7px 14px;
+            color: #39342F !important;
+            background-color: transparent;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600 !important;
+            white-space: nowrap;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .site-nav .nav-link:hover,
+        .site-nav .nav-link:focus {
+            background-color: #EFECE4;
+            color: var(--burgundy) !important;
+        }
+
+        main {
+            width: 100%;
+            flex: 1 0 auto;
+            padding-top: 35px;
+            padding-bottom: 65px;
+        }
+
+        .reading-column {
+            width: min(100% - 32px, 740px);
+            margin-inline: auto;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 22px;
+            color: var(--burgundy);
+            font-size: 0.96rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: var(--burgundy-dark);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .article-category {
+            margin: 0 0 8px;
+            color: var(--burgundy);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .article-title {
+            margin: 0 0 17px;
+            color: var(--ink);
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: clamp(2.35rem, 6vw, 3.35rem);
+            font-weight: 700;
+            line-height: 1.04;
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px 18px;
+            margin-bottom: 25px;
+            color: var(--muted);
+            font-size: 0.91rem;
+        }
+
+        .article-meta a {
+            color: var(--burgundy);
+            text-decoration: none;
+        }
+
+        .article-meta a:hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .article-figure {
+            width: min(calc(100vw - 40px), 860px);
+            margin: 0 50% 30px;
+            transform: translateX(-50%);
+            text-align: center; /* Центрирует картинку и подпись */
+        }
+
+        .article-image {
+            display: inline-block; /* Рамка будет облегать саму картинку, а не пустоту */
+            width: auto;
+            max-width: 100%;
+            max-height: 620px;
+            height: auto;
+            border: 1px solid #DCD5C7;
+            box-shadow: 0 8px 24px rgba(38, 37, 34, 0.08);
+        }
+
+        .article-caption {
+            margin-top: 10px;
+            color: var(--muted);
+            font-family: "PT Serif", Georgia, serif;
+            font-size: 0.86rem;
+            font-style: italic;
+            line-height: 1.45;
+            text-align: center;
+        }
+
+
+        .article-short-description {
+            margin: 0 0 25px;
+            padding-left: 18px;
+            border-left: 3px solid var(--burgundy);
+            color: #514B43;
+            font-family: "PT Serif", Georgia, serif;
+            font-size: 1.18rem;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .article-content {
+            color: #292824;
+            font-family: "PT Serif", Georgia, serif;
+            font-size: 19px;
+            line-height: 1.65;
+            overflow-wrap: break-word;
+        }
+
+        .article-content p {
+            margin-bottom: 1.25em;
+        }
+
+        .article-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-heading {
+            margin: 0 0 22px;
+            color: var(--ink);
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: 2.15rem;
+            font-weight: 700;
+        }
+
+        .related-section,
+        .editorial-section,
+        .comments-section {
+            margin-top: 54px;
+        }
+
+        .related-wide {
+            width: min(calc(100% - 40px), 1080px);
+            margin: 54px auto 0;
+        }
+
+        .recommendation-card {
+            display: block;
+            height: 100%;
+            padding: 21px;
+            background: var(--paper-light);
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            color: inherit;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(48, 39, 29, 0.09);
+            color: inherit;
+        }
+
+        .recommendation-card .card-title {
+            margin-bottom: 10px;
+            color: var(--burgundy);
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            line-height: 1.12;
+        }
+
+        .recommendation-card .card-text {
+            margin: 0;
+            color: var(--muted);
+            font-family: "PT Serif", Georgia, serif;
+            font-size: 0.94rem;
+            line-height: 1.5;
+        }
+
+        .editorial-note {
+            padding: 25px 27px;
+            background: var(--paper-deep);
+            border: 1px solid #E3DCCE;
+            border-left: 4px solid var(--burgundy);
+        }
+
+        .editorial-note h3 {
+            margin: 0 0 13px;
+            color: var(--burgundy);
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .editorial-note-text {
+            margin: 0 0 16px;
+            color: #37332E;
+            font-family: "PT Serif", Georgia, serif;
+            font-size: 1.05rem;
+            line-height: 1.65;
+        }
+
+        .editorial-signature {
+            color: var(--muted);
+            font-family: "PT Serif", Georgia, serif;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .comment-card {
+            margin-bottom: 14px;
+            padding: 19px 21px;
+            background: var(--paper-light);
+            border: 1px solid var(--line);
+            border-radius: 3px;
+        }
+
+        .comment-author {
+            margin-bottom: 8px;
+            color: var(--burgundy);
+            font-family: "PT Sans", Arial, sans-serif;
+            font-size: 0.98rem;
+            font-weight: 700;
+        }
+
+        .comment-text {
+            margin-bottom: 9px;
+            color: var(--ink);
+            font-family: "PT Serif", Georgia, serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .comment-date {
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .comment-form {
+            padding-top: 8px;
+        }
+
+        .comment-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--ink);
+            font-size: 0.94rem;
+            font-weight: 700;
+        }
+
+        .comment-form select,
+        .comment-form input,
+        .comment-form textarea,
+        .comment-form .form-control,
+        .comment-form .form-select {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            padding: 11px 13px;
+            background-color: var(--paper-light);
+            border: 1px solid #CFC7B9;
+            border-radius: 3px;
+            color: var(--ink);
+            font-family: "PT Sans", Arial, sans-serif;
+            font-size: 0.96rem;
+            box-shadow: none;
+        }
+
+        .comment-form textarea {
+            min-height: 145px;
+            resize: vertical;
+        }
+
+        .comment-form select:focus,
+        .comment-form input:focus,
+        .comment-form textarea:focus,
+        .comment-form .form-control:focus,
+        .comment-form .form-select:focus {
+            border-color: var(--burgundy);
+            outline: 0;
+            box-shadow: 0 0 0 3px rgba(128, 37, 32, 0.12);
+        }
+
+        .btn-editorial {
+            display: inline-block;
+            padding: 11px 19px;
+            background: var(--burgundy);
+            border: 1px solid var(--burgundy);
+            border-radius: 3px;
+            color: #fffaf2;
+            font-family: "PT Sans", Arial, sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-editorial:hover,
+        .btn-editorial:focus {
+            background: var(--burgundy-dark);
+            border-color: var(--burgundy-dark);
+            color: #fffaf2;
+        }
+
+        .empty-comments {
+            color: var(--muted);
+            font-family: "PT Serif", Georgia, serif;
+            font-style: italic;
+        }
+
+        .site-footer {
+            margin-top: auto;
+            padding: 27px 0;
+            background: #EFECE4;
+            border-top: 1px solid #DCD5C7;
+            color: #222222;
+            text-align: center;
+        }
+
+        .site-footer .footer-name {
+            margin-bottom: 4px;
+            font-family: "Cormorant Garamond", Georgia, serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .site-footer .footer-copy {
+            margin: 0;
+            color: #746F67;
+            font-size: 0.82rem;
+        }
+
+        @media (max-width: 576px) {
+            main {
+                padding-top: 25px;
+                padding-bottom: 45px;
+            }
+
+            .article-title {
+                font-size: 2.45rem;
+            }
+
+            .article-content {
+                font-size: 18px;
+                line-height: 1.65;
+            }
+
+            .editorial-note {
+                padding: 20px;
+            }
+
+            .recommendation-card {
+                padding: 18px;
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-light d-flex flex-column min-vh-100">
+<body>
 
-    <header class="bg-dark text-white py-4">
+    <header class="site-header">
         <div class="container">
-            <h1 class="display-5 fw-bold mb-1">НОВОСТИ ONLINE</h1>
-            <p class="lead mb-0">Актуальные новости и интересные статьи</p>
+            <h1>СТАРЫЕ СТАРОСТИ</h1>
+            <p>Авторские материалы и тематические истории</p>
         </div>
     </header>
 
-    <nav class="navbar bg-white border-bottom">
-        <div class="container">
-            <a href="/" class="nav-link text-dark">Главная</a>
-        </div>
-    </nav>
+    <nav class="site-nav">
+    <div class="container">
+        <a href="/" class="nav-link">Главная</a>
+        <a href="{% url 'article_manage' %}" class="nav-link">Управление публикациями</a>
+    </div>
+</nav>
 
-    <main class="container py-4 mb-5 flex-grow-1">
+    <main>
+        <div class="reading-column">
 
-        <div class="row justify-content-center">
-            <div class="col-lg-9">
 
-                <article class="card shadow-sm border-0">
 
-                    {% with image=article.image_set.first %}
-                        {% if image and image.image_file %}
+            <article>
+
+                <p class="article-category">Публикация</p>
+
+                <h1 class="article-title">{{ article.title }}</h1>
+
+                <div class="article-meta">
+                    <span>
+                        Автор:
+                        <a href="{% url 'author_detail' article.author.author_id %}">
+                            {{ article.author.first_name }} {{ article.author.last_name }}
+                        </a>
+                    </span>
+                    <span>{{ article.published_at|date:"d.m.Y H:i" }}</span>
+                </div>
+
+                {% with image=article.image_set.first %}
+                    {% if image and image.image_file %}
+                        <figure class="article-figure">
                             <img src="{{ image.image_file.url }}"
-                                 class="card-img-top"
-                                 alt="{{ image.alt_text }}"
-                                 style="max-height: 450px; object-fit: cover;">
-                        {% endif %}
-                    {% endwith %}
+                                 class="article-image"
+                                 alt="{{ image.alt_text }}">
+                            {% if image.alt_text %}
+                                <figcaption class="article-caption">
+                                    {{ image.alt_text }}
+                                </figcaption>
+                            {% endif %}
+                        </figure>
+                    {% endif %}
+                {% endwith %}
 
-                    <div class="card-body p-4 p-md-5">
+                {% if article.short_description %}
+                    <p class="article-short-description">
+                        {{ article.short_description }}
+                    </p>
+                {% endif %}
 
-                        <h1 class="fw-bold mb-3">
-                            {{ article.title }}
-                        </h1>
+                <div class="article-content">
+                    {{ article.content|linebreaks }}
+                </div>
 
-                        <p class="text-muted small">
-                            Дата публикации:
-                            {{ article.published_at|date:"d.m.Y H:i" }}
+            </article>
+
+        </div>
+
+        {% if related_articles %}
+            <section class="related-section related-wide">
+                <h2 class="section-heading">Читайте также</h2>
+
+                <div class="row g-3">
+                    {% for related in related_articles %}
+                        <div class="col-12 col-md-6">
+                            <a href="{% url 'article_detail' related.article_id %}"
+                               class="recommendation-card">
+
+                                <h3 class="card-title">
+                                    {{ related.title }}
+                                </h3>
+
+                                <p class="card-text">
+                                    {{ related.short_description|truncatewords:15 }}
+                                </p>
+
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        <div class="reading-column">
+            {% if editorial_review and editorial_review.review_comments %}
+                <section class="editorial-section">
+                    <div class="editorial-note">
+
+                        <h3>Комментарий главного редактора</h3>
+
+                        <p class="editorial-note-text">
+                            {{ editorial_review.review_comments }}
                         </p>
 
-                        <hr class="my-4">
-
-                        <p class="lead">
-                            {{ article.short_description }}
-                        </p>
-
-                        <div class="fs-5 lh-lg">
-                            {{ article.content|linebreaks }}
+                        <div class="editorial-signature">
+                            {{ editorial_review.reviewer.get_full_name|default:editorial_review.reviewer.username }} ·
+                            {{ editorial_review.reviewed_at|date:"d.m.Y H:i" }}
                         </div>
 
-                        <a href="/" class="btn btn-primary mt-4">
-                            Вернуться к публикациям
-                        </a>
+                    </div>
+                </section>
+            {% endif %}
+
+            <section class="comments-section">
+
+                <h2 class="section-heading">Комментарии</h2>
+
+                {% for comment in comments %}
+                    <div class="comment-card">
+
+                        <h3 class="comment-author">
+                            {{ comment.user.get_full_name|default:comment.user.username }}
+                        </h3>
+
+                        <p class="comment-text">
+                            {{ comment.comment_text }}
+                        </p>
+
+                        <small class="comment-date">
+                            {{ comment.created_at|date:"d.m.Y H:i" }}
+                        </small>
 
                     </div>
-                </article>
+                {% empty %}
+                    <p class="empty-comments">Пока комментариев нет.</p>
+                {% endfor %}
 
-            </div>
+                <hr class="my-4" style="border-color: var(--line); opacity: 1;">
+
+                <h3 class="section-heading" style="font-size: 1.85rem;">
+                    Оставить комментарий
+                </h3>
+
+                <form method="post" class="comment-form">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ comment_form.user.id_for_label }}">
+                            Выберите автора комментария
+                        </label>
+                        {{ comment_form.user }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ comment_form.comment_text.id_for_label }}">
+                            Комментарий
+                        </label>
+                        {{ comment_form.comment_text }}
+                    </div>
+
+                    <button type="submit" class="btn-editorial">
+                        Отправить комментарий
+                    </button>
+                </form>
+
+            </section>
+
         </div>
-
     </main>
 
-    <footer class="bg-dark text-white py-4 mt-auto">
-        <div class="container text-center">
-            <p class="mb-1 fw-bold">НОВОСТИ ONLINE</p>
-            <p class="small text-secondary mb-0">
+    <footer class="site-footer">
+        <div class="container">
+            <p class="footer-name">СТАРЫЕ СТАРОСТИ</p>
+            <p class="footer-copy">
                 © Онлайн-издание. Все права защищены.
             </p>
         </div>

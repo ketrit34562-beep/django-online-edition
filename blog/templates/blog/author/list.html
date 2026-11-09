@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Авторы — Старые старости</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+    :root{
+        --paper:#F7F4EB;
+        --paper-card:#FFFEFB;
+        --ink:#222222;
+        --muted:#746F67;
+        --accent:#802520;
+        --accent-dark:#651B18;
+        --line:#DED7CA;
+        --soft:#EEE5DC;
+    }
+
+    body{
+        background:var(--paper);
+        color:var(--ink);
+        font-family:"PT Sans", Arial, sans-serif;
+        min-height:100vh;
+        display:flex;
+        flex-direction:column;
+    }
+
+    .site-header{
+        background:#1E2229;
+        color:#F9F7F2;
+        padding:38px 0 32px;
+        border-bottom:3px double #D5CEC0;
+    }
+
+    .site-title{
+        font-family:Georgia,"Times New Roman",serif;
+        font-weight:700;
+    }
+
+    .site-subtitle{
+        color:#D8D1C6;
+        font-family:Georgia,"Times New Roman",serif;
+    }
+
+    .navbar{
+        background:rgba(249,247,242,.97)!important;
+        border-bottom:1px solid var(--line);
+        box-shadow:0 2px 10px rgba(45,35,25,.05);
+    }
+
+    .navbar .nav-link{
+        color:#39342F!important;
+        font-weight:600;
+        padding:8px 13px;
+        border-radius:5px;
+        transition:.2s;
+    }
+
+    .navbar .nav-link:hover{
+        background:var(--soft);
+        color:var(--accent)!important;
+    }
+
+    .navbar .nav-link.active{
+        color:var(--accent)!important;
+        font-weight:700;
+        box-shadow:inset 0 -2px 0 var(--accent);
+        border-radius:0;
+    }
+
+    .authors-title{
+        font-family:"Cormorant Garamond",serif;
+        font-size:3rem;
+        font-weight:700;
+        margin-bottom:2rem;
+    }
+
+    .author-card{
+        background:var(--paper-card);
+        border:1px solid var(--line);
+        border-radius:7px;
+        overflow:hidden;
+
+        height:100%;
+        display:flex;
+        flex-direction:column;
+
+        transition:transform .2s ease, box-shadow .2s ease;
+    }
+
+    .author-card .card-body,
+    .author-card .author-body {
+        padding: 20px 24px 24px !important;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .author-card:hover{
+        transform:translateY(-3px);
+        box-shadow:0 9px 24px rgba(48,37,26,.09);
+    }
+
+    .author-image-wrapper{
+        height:260px;
+        overflow:hidden;
+        background:#E9E1D5;
+    }
+
+    .author-image{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        object-position: center 28%;
+        display:block;
+    }
+
+    .author-name{
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:1.35rem;
+        font-weight:700;
+        margin-bottom:15px;
+    }
+
+    .author-bio{
+        font-family:"PT Serif",Georgia,serif;
+        color:#625B53;
+        line-height:1.6;
+
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:3;
+        overflow:hidden;
+    }
+
+    .author-link{
+        margin-top:auto;
+
+        display:inline-block;
+
+        padding:8px 14px;
+
+        border:1px solid #802520;
+        border-radius:4px;
+
+        color:#802520;
+        text-decoration:none;
+        font-weight:600;
+
+        transition:.2s;
+    }
+
+    .author-link:hover{
+        background:#802520;
+        color:#F7F4EB;
+    }
+
+    footer{
+        margin-top:auto;
+        background:#EFECE4;
+        border-top:1px solid #DCD5C7;
+    }
+
+    footer .text-secondary{
+        color:#746F67!important;
+    }
+
+    @media(max-width:767.98px){
+
+        .authors-title{
+            font-size:2.3rem;
+        }
+
+        .author-image-wrapper{
+            height:220px;
+        }
+
+    }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <h1 class="display-5 site-title mb-2">
+            СТАРЫЕ СТАРОСТИ
+        </h1>
+
+        <p class="lead site-subtitle mb-0">
+            Авторские материалы и тематические истории
+        </p>
+    </div>
+</header>
+
+<nav class="navbar navbar-expand-md sticky-top">
+    <div class="container">
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                    <a href="{% url 'post_list' %}" class="nav-link">
+                        Главная
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'author_list' %}" class="nav-link active">
+                        Авторы
+                    </a>
+                </li>
+
+
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<main class="container py-5 flex-grow-1">
+
+    <h2 class="authors-title">
+        Авторы
+    </h2>
+
+    <div class="row g-4">
+
+        {% for author in authors %}
+
+        <div class="col-12 col-md-6 col-lg-4">
+
+            <article class="author-card">
+
+                {% if author.photo %}
+                <div class="author-image-wrapper">
+                    <img src="{{ author.photo.url }}"
+                         alt="{{ author.first_name }} {{ author.last_name }}"
+                         class="author-image">
+                </div>
+                {% endif %}
+
+                <div class="card-body d-flex flex-column">
+
+                    <h3 class="author-name">
+                        {{ author.first_name }}
+                        {{ author.last_name }}
+                    </h3>
+
+                    <p class="author-bio">
+                        {{ author.biography|default:"Биография пока не добавлена." }}
+                    </p>
+
+                    <a href="{% url 'author_detail' author.author_id %}"
+                       class="author-link">
+                        Открыть досье →
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="alert alert-info">
+                Авторы пока не добавлены.
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</main>
+
+<footer class="py-4">
+    <div class="container text-center">
+
+        <p class="mb-1 fw-bold">
+            СТАРЫЕ СТАРОСТИ
+        </p>
+
+        <p class="small text-secondary mb-0">
+            © Онлайн-издание. Все права защищены.
+        </p>
+
+    </div>
+</footer>
+
+
+</body>
+</html>

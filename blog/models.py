@@ -87,6 +87,17 @@ class User(models.Model):
     def __str__(self):
         return self.username
 
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_username(self):
+        return self.username
+
 
 
 class Author(models.Model):
@@ -113,12 +124,6 @@ class Author(models.Model):
         blank=True,
         verbose_name='Биография'
     )
-    photo = models.ImageField(
-        upload_to='authors/',
-        null=True,
-        blank=True,
-        verbose_name='Фотография автора'
-    )
     created_by = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -126,6 +131,14 @@ class Author(models.Model):
         related_name='created_authors',
         verbose_name='Создал'
     )
+
+    photo = models.ImageField(
+        upload_to='authors/',
+        null=True,
+        blank=True,
+        verbose_name='Фотография автора'
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата создания'
@@ -227,13 +240,7 @@ class Article(models.Model):
         db_column='category_id',
         verbose_name='Категория'
     )
-    created_by = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        db_column='created_by',
-        related_name='created_articles',
-        verbose_name='Создал'
-    )
+
     title = models.CharField(
         max_length=255,
         verbose_name='Заголовок'
@@ -245,11 +252,18 @@ class Article(models.Model):
     content = models.TextField(
         verbose_name='Содержание'
     )
+    STATUS_CHOICES = [
+        ('Черновик', 'Черновик'),
+        ('Отправить на проверку', 'Отправить на проверку'),
+    ]
+
     status = models.CharField(
         max_length=30,
+        choices=STATUS_CHOICES,
         default='Черновик',
         verbose_name='Статус'
     )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата создания'
@@ -482,8 +496,15 @@ class Comment(models.Model):
     comment_text = models.TextField(
         verbose_name='Текст комментария'
     )
+    STATUS_CHOICES = [
+        ('Одобрен', 'Одобрен'),
+        ('На проверке', 'На проверке'),
+        ('Отклонено', 'Отклонено'),
+    ]
+
     status = models.CharField(
         max_length=30,
+        choices=STATUS_CHOICES,
         default='На проверке',
         verbose_name='Статус'
     )
@@ -521,9 +542,9 @@ class Comment(models.Model):
 
 class EditorialReview(models.Model):
     DECISION_CHOICES = [
-        ('Одобрено', 'Одобрено'),
-        ('На доработку', 'На доработку'),
-        ('Отклонено', 'Отклонено'),
+        ('В процессе проверки', 'В процессе проверки'),
+        ('Отклонено на доработку', 'Отклонено на доработку'),
+        ('Опубликовать', 'Опубликовать'),
     ]
 
     review_id = models.AutoField(

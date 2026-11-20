@@ -65,6 +65,7 @@ class ArticleAdmin(ExportMixin, SimpleHistoryAdmin):
         'author',
         'category',
         'status',
+        'review_status',
         'created_at',
         'published_at',
     ]
@@ -80,6 +81,7 @@ class ArticleAdmin(ExportMixin, SimpleHistoryAdmin):
     date_hierarchy = 'created_at'
     readonly_fields = [
         'article_id',
+        'review_status',
         'created_at',
         'updated_at',
         'published_at',
@@ -87,15 +89,28 @@ class ArticleAdmin(ExportMixin, SimpleHistoryAdmin):
     raw_id_fields = ['author', 'category']
     inlines = [ImageInline]
 
-    @admin.display(description='Автор и категория')
+    @admin.display(description='Категория')
     def author_and_category(self, obj):
-        return f'{obj.author} — {obj.category}'
+        return f'{obj.category}'
 
     @admin.display(description='Краткое описание')
     def short_description(self, obj):
         if len(obj.short_description) > 50:
             return obj.short_description[:50] + '...'
         return obj.short_description
+
+    @admin.display(description='Статус проверки редактора')
+    def review_status(self, obj):
+        if not obj or not obj.pk:
+            return 'Ещё не проверялась'
+        latest_review = (
+            obj.editorialreview_set
+            .order_by('-reviewed_at', '-created_at')
+            .first()
+        )
+        if latest_review:
+            return latest_review.decision
+        return 'Не отправлялась на проверку'
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'updated_by':
@@ -119,7 +134,6 @@ class ArticleAdmin(ExportMixin, SimpleHistoryAdmin):
         return super().formfield_for_foreignkey(
             db_field, request, **kwargs
         )
-
 
 @admin.register(Author)
 class AuthorAdmin(SimpleHistoryAdmin):

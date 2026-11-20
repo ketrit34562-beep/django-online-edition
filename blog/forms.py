@@ -1,4 +1,5 @@
-
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django import forms
 from django.contrib.auth.hashers import make_password
 from .models import Article, Comment, User, Role, Author
@@ -63,6 +64,15 @@ class RegistrationForm(forms.ModelForm):
                 attrs={'class': 'form-control'}
             ),
         }
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if password:
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                raise forms.ValidationError(e.messages)
+        return password
 
     def clean(self):
         cleaned_data = super().clean()

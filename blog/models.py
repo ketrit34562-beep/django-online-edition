@@ -247,7 +247,9 @@ class Article(models.Model):
     )
     short_description = models.CharField(
         max_length=500,
+
         verbose_name='Краткое описание'
+
     )
     content = models.TextField(
         verbose_name='Содержание'

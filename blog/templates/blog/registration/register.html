@@ -1,426 +1,436 @@
 
-<!DOCTYPE html>
-<html lang="ru">
+{% extends "blog/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block title %}Регистрация — Старые старости{% endblock %}
 
-    <title>Регистрация — Старые старости</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+{% block extra_css %}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@400;700&display=swap"
-          rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@400;700&display=swap"
+      rel="stylesheet">
 
-    <style>
-        :root {
-            --paper: #F7F4EB;
-            --paper-light: #FCFAF5;
-            --paper-deep: #EFECE4;
-            --ink: #262522;
-            --muted: #777168;
-            --burgundy: #802520;
-            --burgundy-dark: #651B18;
-            --line: #DED8CC;
-            --header: #1E2229;
-            --input-bg: #FBF9F4;
-        }
+<style>
+    :root {
+        --paper: #F7F4EB;
+        --paper-light: #FCFAF5;
+        --paper-deep: #EFECE4;
+        --ink: #262522;
+        --muted: #777168;
+        --burgundy: #802520;
+        --burgundy-dark: #651B18;
+        --line: #DED8CC;
+        --header: #1E2229;
+        --input-bg: #FBF9F4;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    html {
+        background: var(--paper);
+    }
 
-        html {
-            background: var(--paper);
-        }
+    body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "PT Sans", Arial, sans-serif;
+    }
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: var(--paper);
-            color: var(--ink);
-            font-family: "PT Sans", Arial, sans-serif;
-        }
+    /* Шапка сайта */
 
-        /* Шапка сайта */
+    .site-header {
+        background: var(--header) !important;
+        color: #F8F5EE !important;
+        padding: 27px 0 24px;
+        border-bottom: 3px double #D5CEC0;
+    }
 
-        .site-header {
-            background: var(--header);
-            color: #F8F5EE;
-            padding: 27px 0 24px;
-            border-bottom: 3px double #D5CEC0;
-        }
+    .site-header h1 {
+        margin: 0 0 3px;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        font-weight: 700;
+        letter-spacing: 0.045em;
+    }
 
-        .site-header h1 {
-            margin: 0 0 3px;
-            font-family: "Cormorant Garamond", Georgia, serif;
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            font-weight: 700;
-            letter-spacing: 0.045em;
-        }
+    .site-header p {
+        margin: 0;
+        color: #D4D0C8;
+        font-size: 0.98rem;
+    }
 
-        .site-header p {
-            margin: 0;
-            color: #D4D0C8;
-            font-size: 0.98rem;
-        }
+    /* Навигация */
 
-        /* Навигация */
+    .navbar {
+        background-color: rgba(249, 247, 242, 0.97) !important;
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line) !important;
+        box-shadow: 0 2px 10px rgba(45, 35, 25, 0.045);
+        padding: 8px 0 !important;
+        margin-bottom: 0 !important;
+    }
 
-        .navbar {
-            background-color: rgba(249, 247, 242, 0.97) !important;
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--line) !important;
-            box-shadow: 0 2px 10px rgba(45, 35, 25, 0.045);
-            padding: 8px 0 !important;
-            margin-bottom: 0 !important;
-        }
+    .navbar .nav-link {
+        display: inline-block;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        padding: 7px 14px !important;
+        margin-right: 8px;
+        color: #39342F !important;
+        background-color: transparent !important;
+        text-decoration: none;
+        border-bottom: none !important;
+        border-radius: 5px !important;
+        font-size: 0.9rem;
+        font-weight: 600 !important;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
 
-        .navbar .nav-link {
-            display: inline-block;
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            padding: 7px 14px !important;
-            margin-right: 8px;
-            color: #39342F !important;
-            background-color: transparent !important;
-            text-decoration: none;
-            border-bottom: none !important;
-            border-radius: 5px !important;
-            font-size: 0.9rem;
-            font-weight: 600 !important;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
+    .navbar .nav-link:hover,
+    .navbar .nav-link:focus {
+        background-color: #EFECE4 !important;
+        color: var(--burgundy) !important;
+    }
 
-        .navbar .nav-link:hover,
-        .navbar .nav-link:focus {
-            background-color: #EFECE4 !important;
-            color: var(--burgundy) !important;
-        }
+    /* Основная часть */
 
-        /* Основная часть */
+    .register-main {
+        width: 100%;
+        flex: 1 0 auto;
+        padding-top: 55px;
+        padding-bottom: 65px;
+    }
 
-        main {
-            width: 100%;
-            flex: 1 0 auto;
-            padding-top: 55px;
-            padding-bottom: 65px;
-        }
+    /* Карточка регистрации */
 
-        /* Карточка регистрации */
+    .register-card {
+        background: var(--paper-light);
+        border: 1px solid var(--line);
+        border-top: 3px solid var(--burgundy);
+        border-radius: 3px;
+        box-shadow: 0 8px 25px rgba(38, 37, 34, 0.07);
+    }
 
-        .register-card {
-            background: var(--paper-light);
-            border: 1px solid var(--line);
-            border-top: 3px solid var(--burgundy);
-            border-radius: 3px;
-            box-shadow: 0 8px 25px rgba(38, 37, 34, 0.07);
+    .register-card .card-body {
+        padding: 36px 34px;
+    }
+
+    .card-label {
+        margin: 0 0 8px;
+        color: var(--burgundy);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .register-title {
+        margin: 0 0 10px;
+        color: var(--ink);
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(2.2rem, 5vw, 2.4rem);
+        font-weight: 700;
+        line-height: 1.1;
+    }
+
+    .register-subtitle {
+        margin-bottom: 30px;
+        color: #746F67;
+        font-family: "PT Serif", Georgia, serif;
+        font-size: 0.98rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+
+    /* Поля формы */
+
+    .register-card .form-label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--ink);
+        font-family: "PT Sans", Arial, sans-serif;
+        font-size: 0.94rem;
+        font-weight: 700;
+    }
+
+    .register-card .form-control {
+        display: block;
+        width: 100%;
+        padding: 10px 14px;
+        background-color: var(--input-bg);
+        border: 1px solid #D6CFC2;
+        border-radius: 3px;
+        color: var(--ink);
+        font-family: "PT Sans", Arial, sans-serif;
+        font-size: 0.96rem;
+        box-shadow: none;
+        transition: border-color 0.2s ease,
+                    box-shadow 0.2s ease;
+    }
+
+    .register-card .form-control:focus {
+        background-color: var(--input-bg);
+        border-color: var(--burgundy);
+        outline: 0;
+        box-shadow: 0 0 0 3px rgba(128, 37, 32, 0.12);
+    }
+
+    /* Ошибки формы */
+
+    .register-card .alert-danger {
+        padding: 12px 15px;
+        background: #F5EAE6;
+        border: 1px solid #D9B9B2;
+        border-radius: 3px;
+        color: var(--burgundy-dark);
+        font-size: 0.9rem;
+    }
+
+    .register-card .text-danger {
+        color: var(--burgundy) !important;
+    }
+
+    /* Кнопка регистрации */
+
+    .btn-register {
+        display: block;
+        width: 100%;
+        min-height: 45px;
+        margin-top: 8px;
+        padding: 11px 19px;
+        background: var(--burgundy);
+        border: 1px solid var(--burgundy);
+        border-radius: 3px;
+        color: #FFFAF2;
+        font-family: "PT Sans", Arial, sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        transition: background 0.2s ease,
+                    border-color 0.2s ease;
+    }
+
+    .btn-register:hover,
+    .btn-register:focus {
+        background: var(--burgundy-dark);
+        border-color: var(--burgundy-dark);
+        color: #FFFAF2;
+        box-shadow: none;
+    }
+
+    /* Разделитель и ссылка входа */
+
+    .register-card hr {
+        margin: 28px 0;
+        border-color: var(--line);
+        opacity: 1;
+    }
+
+    .login-text {
+        margin: 0;
+        color: var(--ink);
+        font-family: "PT Serif", Georgia, serif;
+        font-size: 0.95rem;
+    }
+
+    .login-text a {
+        color: var(--burgundy);
+        font-family: "PT Sans", Arial, sans-serif;
+        font-weight: 700;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .login-text a:hover {
+        color: var(--burgundy-dark);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    /* Подвал */
+
+    .site-footer {
+        margin-top: auto;
+        padding: 27px 0;
+        background: var(--paper-deep) !important;
+        border-top: 1px solid #DCD5C7;
+        color: #39342F;
+        text-align: center;
+    }
+
+    .site-footer .footer-name {
+        margin-bottom: 4px;
+        color: #39342F;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+    }
+
+    .site-footer .footer-copy {
+        margin: 0;
+        color: #746F67;
+        font-size: 0.82rem;
+    }
+
+    /* Адаптация для мобильных устройств */
+
+    @media (max-width: 576px) {
+
+        .register-main {
+            padding-top: 35px;
+            padding-bottom: 45px;
         }
 
         .register-card .card-body {
-            padding: 36px 34px;
-        }
-
-        .card-label {
-            margin: 0 0 8px;
-            color: var(--burgundy);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-align: center;
-            text-transform: uppercase;
+            padding: 28px 20px;
         }
 
         .register-title {
-            margin: 0 0 10px;
-            color: var(--ink);
-            font-family: "Cormorant Garamond", Georgia, serif;
-            font-size: clamp(2.2rem, 5vw, 2.4rem);
-            font-weight: 700;
-            line-height: 1.1;
+            font-size: 2.2rem;
         }
 
-        .register-subtitle {
-            margin-bottom: 30px;
-            color: #746F67;
-            font-family: "PT Serif", Georgia, serif;
-            font-size: 0.98rem;
-            font-style: italic;
-            line-height: 1.5;
+        .site-header {
+            padding: 23px 0 20px;
         }
 
-        /* Поля формы */
-
-        .register-card .form-label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--ink);
-            font-family: "PT Sans", Arial, sans-serif;
-            font-size: 0.94rem;
-            font-weight: 700;
+        .navbar .nav-link {
+            margin-right: 15px;
         }
+    }
+</style>
 
-        .register-card .form-control {
-            display: block;
-            width: 100%;
-            padding: 10px 14px;
-            background-color: var(--input-bg);
-            border: 1px solid #D6CFC2;
-            border-radius: 3px;
-            color: var(--ink);
-            font-family: "PT Sans", Arial, sans-serif;
-            font-size: 0.96rem;
-            box-shadow: none;
-            transition: border-color 0.2s ease,
-                        box-shadow 0.2s ease;
-        }
+{% endblock %}
 
-        .register-card .form-control:focus {
-            background-color: var(--input-bg);
-            border-color: var(--burgundy);
-            outline: 0;
-            box-shadow: 0 0 0 3px rgba(128, 37, 32, 0.12);
-        }
 
-        /* Ошибки формы */
+{% block header %}
 
-        .register-card .alert-danger {
-            padding: 12px 15px;
-            background: #F5EAE6;
-            border: 1px solid #D9B9B2;
-            border-radius: 3px;
-            color: var(--burgundy-dark);
-            font-size: 0.9rem;
-        }
+<header class="site-header">
 
-        .register-card .text-danger {
-            color: var(--burgundy) !important;
-        }
+    <div class="container">
 
-        /* Кнопка регистрации */
+        <h1>
+            СТАРЫЕ СТАРОСТИ
+        </h1>
 
-        .btn-register {
-            display: block;
-            width: 100%;
-            min-height: 45px;
-            margin-top: 8px;
-            padding: 11px 19px;
-            background: var(--burgundy);
-            border: 1px solid var(--burgundy);
-            border-radius: 3px;
-            color: #FFFAF2;
-            font-family: "PT Sans", Arial, sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            transition: background 0.2s ease,
-                        border-color 0.2s ease;
-        }
+        <p>
+            Авторские материалы и тематические истории
+        </p>
 
-        .btn-register:hover,
-        .btn-register:focus {
-            background: var(--burgundy-dark);
-            border-color: var(--burgundy-dark);
-            color: #FFFAF2;
-            box-shadow: none;
-        }
+    </div>
 
-        /* Разделитель и ссылка входа */
+</header>
 
-        .register-card hr {
-            margin: 28px 0;
-            border-color: var(--line);
-            opacity: 1;
-        }
+{% endblock %}
 
-        .login-text {
-            margin: 0;
-            color: var(--ink);
-            font-family: "PT Serif", Georgia, serif;
-            font-size: 0.95rem;
-        }
 
-        .login-text a {
-            color: var(--burgundy);
-            font-family: "PT Sans", Arial, sans-serif;
-            font-weight: 700;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
+{% block navigation %}
 
-        .login-text a:hover {
-            color: var(--burgundy-dark);
-            text-decoration: underline;
-            text-underline-offset: 4px;
-        }
+<nav class="navbar navbar-expand-md">
 
-        /* Подвал */
+    <div class="container">
 
-        .site-footer {
-            margin-top: auto;
-            padding: 27px 0;
-            background: var(--paper-deep);
-            border-top: 1px solid #DCD5C7;
-            color: #39342F;
-            text-align: center;
-        }
+        <ul class="navbar-nav">
 
-        .site-footer .footer-name {
-            margin-bottom: 4px;
-            color: #39342F;
-            font-family: "Cormorant Garamond", Georgia, serif;
-            font-size: 1.35rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-        }
+            <li class="nav-item">
 
-        .site-footer .footer-copy {
-            margin: 0;
-            color: #746F67;
-            font-size: 0.82rem;
-        }
+                <a href="{% url 'post_list' %}" class="nav-link">
+                    Главная
+                </a>
 
-        /* Адаптация для мобильных устройств */
+            </li>
 
-        @media (max-width: 576px) {
+        </ul>
 
-            main {
-                padding-top: 35px;
-                padding-bottom: 45px;
-            }
+    </div>
 
-            .register-card .card-body {
-                padding: 28px 20px;
-            }
+</nav>
 
-            .register-title {
-                font-size: 2.2rem;
-            }
+{% endblock %}
 
-            .site-header {
-                padding: 23px 0 20px;
-            }
 
-            .navbar .nav-link {
-                margin-right: 15px;
-            }
-        }
-    </style>
-</head>
+{% block content %}
 
-<body>
+<div class="register-main">
 
-    <!-- Шапка сайта -->
+    <div class="container">
 
-    <header class="site-header">
-        <div class="container">
+        <div class="row justify-content-center">
 
-            <h1>
-                СТАРЫЕ СТАРОСТИ
-            </h1>
+            <div class="col-12 col-md-8 col-lg-5">
 
-            <p>
-                Авторские материалы и тематические истории
-            </p>
+                <div class="card register-card">
 
-        </div>
-    </header>
+                    <div class="card-body">
 
-    <!-- Навигационное меню -->
+                        <p class="card-label">
+                            Новый читатель
+                        </p>
 
-    <nav class="navbar navbar-expand-md">
-        <div class="container">
+                        <h2 class="register-title text-center">
+                            Регистрация
+                        </h2>
 
-            <ul class="navbar-nav">
+                        <p class="register-subtitle text-center">
+                            Создайте аккаунт в нашем издании.
+                        </p>
 
-                <li class="nav-item">
-                    <a href="{% url 'post_list' %}" class="nav-link">
-                        Главная
-                    </a>
-                </li>
+                        <form method="post" id="registerForm">
 
-            </ul>
+                            {% csrf_token %}
 
-        </div>
-    </nav>
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger py-2">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
 
-    <!-- Форма регистрации -->
+                            {% for field in form %}
+                                <div class="mb-3">
+                                    <label for="{{ field.id_for_label }}"
+                                           class="form-label">
+                                        {{ field.label }}
+                                    </label>
 
-    <main>
-
-        <div class="container">
-
-            <div class="row justify-content-center">
-
-                <div class="col-12 col-md-8 col-lg-5">
-
-                    <div class="card register-card">
-
-                        <div class="card-body">
-
-                            <p class="card-label">
-                                Новый читатель
-                            </p>
-
-                            <h2 class="register-title text-center">
-                                Регистрация
-                            </h2>
-
-                            <p class="register-subtitle text-center">
-                                Создайте аккаунт в нашем издании.
-                            </p>
-
-                            <form method="post">
-
-                                {% csrf_token %}
-
-                                {% if form.non_field_errors %}
-                                    <div class="alert alert-danger">
-                                        {{ form.non_field_errors }}
-                                    </div>
-                                {% endif %}
-
-                                {% for field in form %}
-
-                                    <div class="mb-3">
-
-                                        <label for="{{ field.id_for_label }}"
-                                               class="form-label">
-                                            {{ field.label }}
-                                        </label>
-
+                                    {% if field.name == 'password' or field.name == 'password_confirm' %}
+                                        <div class="position-relative">
+                                            {{ field }}
+                                            <button type="button"
+                                                    class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent text-secondary toggle-password-btn"
+                                                    data-target="{{ field.id_for_label }}"
+                                                    aria-label="Показать или скрыть пароль"
+                                                    style="z-index: 5; box-shadow: none;">
+                                                <svg xmlns="http://w3.org" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                                                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    {% else %}
                                         {{ field }}
+                                    {% endif %}
 
-                                        {% if field.errors %}
-                                            <div class="text-danger small mt-1">
-                                                {{ field.errors }}
-                                            </div>
-                                        {% endif %}
+                                    {% if field.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {{ field.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
 
-                                    </div>
+                            <button type="submit" class="btn-register">
+                                Зарегистрироваться
+                            </button>
 
-                                {% endfor %}
+                        </form>
 
-                                <button type="submit" class="btn-register">
-                                    Зарегистрироваться
-                                </button>
+                        <hr>
 
-                            </form>
-
-                            <hr>
-
-                            <p class="login-text text-center">
-                                Уже есть аккаунт?
-                                <a href="{% url 'login' %}">
-                                    Войти
-                                </a>
-                            </p>
-
-                        </div>
+                        <p class="login-text text-center">
+                            Уже есть аккаунт?
+                            <a href="{% url 'login' %}">
+                                Войти
+                            </a>
+                        </p>
 
                     </div>
 
@@ -430,25 +440,67 @@
 
         </div>
 
-    </main>
+    </div>
 
-    <!-- Подвал сайта -->
+</div>
 
-    <footer class="site-footer">
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. Сохранение позиции прокрутки при ошибке валидации
+        const savedScroll = sessionStorage.getItem('registerScrollY');
+        if (savedScroll !== null) {
+            window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
+            sessionStorage.removeItem('registerScrollY');
+        }
 
-        <div class="container">
+        const regForm = document.getElementById('registerForm');
+        if (regForm) {
+            regForm.addEventListener('submit', function () {
+                sessionStorage.setItem('registerScrollY', window.scrollY);
+            });
+        }
 
-            <p class="footer-name">
-                СТАРЫЕ СТАРОСТИ
-            </p>
+        // 2. Показ / скрытие пароля для обоих полей
+        const eyeOpen = '<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>';
+        const eyeClosed = '<path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/><path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>';
 
-            <p class="footer-copy">
-                © Онлайн-издание. Все права защищены.
-            </p>
+        document.querySelectorAll('.toggle-password-btn').forEach(function (btn) {
+            const targetId = btn.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            const svg = btn.querySelector('svg');
 
-        </div>
+            if (input && svg) {
+                input.style.paddingRight = '2.5rem';
+                btn.addEventListener('click', function () {
+                    const isPassword = input.getAttribute('type') === 'password';
+                    input.setAttribute('type', isPassword ? 'text' : 'password');
+                    svg.innerHTML = isPassword ? eyeClosed : eyeOpen;
+                });
+            }
+        });
+    });
+</script>
 
-    </footer>
 
-</body>
-</html>
+{% endblock %}
+
+
+{% block footer %}
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <p class="footer-name">
+            СТАРЫЕ СТАРОСТИ
+        </p>
+
+        <p class="footer-copy">
+            © Онлайн-издание. Все права защищены.
+        </p>
+
+    </div>
+
+</footer>
+
+{% endblock %}

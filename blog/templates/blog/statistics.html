@@ -1,229 +1,237 @@
 
-<!DOCTYPE html>
-<html lang="ru">
+{% extends "blog/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block title %}Статистика публикаций | Старые старости{% endblock %}
 
-    <title>Статистика публикаций | Старые старости</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+{% block extra_css %}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=PT+Sans:wght@400;700&display=swap"
-          rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=PT+Sans:wght@400;700&display=swap"
+      rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    :root {
+        --paper: #F7F4EB;
+        --card: #FCFAF5;
+        --ink: #262522;
+        --burgundy: #802520;
+        --border: #DED8CC;
+        --grid: #EAE4D7;
+        --text: #524E48;
+    }
 
-    <style>
-        :root {
-            --paper: #F7F4EB;
-            --card: #FCFAF5;
-            --ink: #262522;
-            --burgundy: #802520;
-            --border: #DED8CC;
-            --grid: #EAE4D7;
-            --text: #524E48;
-        }
+    body {
+        background-color: var(--paper);
+        color: var(--ink);
+        font-family: 'PT Sans', sans-serif;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    /* Шапка */
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--paper);
-            color: var(--ink);
-            font-family: 'PT Sans', sans-serif;
-        }
+    .site-header {
+        padding: 25px 0;
+        background-color: #1E2229 !important;
+        color: #FCFAF5 !important;
+        border-bottom: 3px double #D5CEC0;
+    }
 
-        /* Шапка */
+    .site-header h1 {
+        margin-bottom: 4px;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.8rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
 
-        .site-header {
-            padding: 25px 0;
-            background-color: #1E2229;
-            color: #FCFAF5;
-            border-bottom: 3px double #D5CEC0;
-        }
+    .site-header p {
+        margin: 0;
+        color: #D0CCC4;
+        font-size: 1rem;
+    }
 
+    /* Навигация */
+
+    .site-nav {
+        background-color: rgba(249, 247, 242, 0.97);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 2px 10px rgba(45, 35, 25, 0.045);
+        border-bottom: 1px solid #DED8CC;
+        padding: 10px 0;
+    }
+
+    .site-nav .container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .site-nav .nav-link {
+        display: inline-block;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: #39342F !important;
+        padding: 8px 13px;
+        font-size: 0.9rem;
+        font-weight: 600 !important;
+        border-radius: 5px;
+        white-space: nowrap;
+        background-color: transparent;
+        text-decoration: none;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .site-nav .nav-link:hover,
+    .site-nav .nav-link:focus {
+        background-color: #EFECE4;
+        color: #802520 !important;
+    }
+
+    /* Основная часть */
+
+    .statistics-main {
+        flex: 1 0 auto;
+    }
+
+    .page-title {
+        margin-bottom: 8px;
+        color: var(--ink);
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.7rem;
+        font-weight: 700;
+    }
+
+    .page-description {
+        margin-bottom: 30px;
+        color: #777168;
+        font-size: 1rem;
+    }
+
+    /* Карточки графиков */
+
+    .chart-card {
+        min-height: 380px;
+        padding: 22px;
+        background-color: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        box-shadow: none;
+    }
+
+    .chart-card h5 {
+        margin-bottom: 20px;
+        color: var(--ink);
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.7rem;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 290px;
+    }
+
+    /* Подвал */
+
+    .site-footer {
+        margin-top: auto;
+        padding: 25px 0;
+        background-color: #EFECE4 !important;
+        border-top: 1px solid #DCD5C7;
+        color: #39342F;
+    }
+
+    .footer-name {
+        margin-bottom: 5px;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .footer-copy {
+        margin: 0;
+        color: #746F67;
+        font-size: 0.85rem;
+    }
+
+    @media (max-width: 576px) {
         .site-header h1 {
-            margin-bottom: 4px;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.8rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .site-header p {
-            margin: 0;
-            color: #D0CCC4;
-            font-size: 1rem;
-        }
-
-        /* Навигация */
-
-        .site-nav {
-            background-color: rgba(249, 247, 242, 0.97);
-            backdrop-filter: blur(8px);
-            box-shadow: 0 2px 10px rgba(45, 35, 25, 0.045);
-            border-bottom: 1px solid #DED8CC;
-            padding: 10px 0;
-        }
-
-        .site-nav .container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .site-nav .nav-link {
-            display: inline-block;
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            color: #39342F !important;
-            padding: 8px 13px;
-            font-size: 0.9rem;
-            font-weight: 600 !important;
-            border-radius: 5px;
-            white-space: nowrap;
-            background-color: transparent;
-            text-decoration: none;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .site-nav .nav-link:hover,
-        .site-nav .nav-link:focus {
-            background-color: #EFECE4;
-            color: #802520 !important;
-        }
-        /* Основная часть */
-
-        main {
-            flex: 1 0 auto;
+            font-size: 2.2rem;
         }
 
         .page-title {
-            margin-bottom: 8px;
-            color: var(--ink);
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.7rem;
-            font-weight: 700;
+            font-size: 2.2rem;
         }
-
-        .page-description {
-            margin-bottom: 30px;
-            color: #777168;
-            font-size: 1rem;
-        }
-
-        /* Карточки графиков */
 
         .chart-card {
-            min-height: 380px;
-            padding: 22px;
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 3px;
-            box-shadow: none;
+            padding: 16px;
         }
 
         .chart-card h5 {
-            margin-bottom: 20px;
-            color: var(--ink);
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.7rem;
-            font-weight: 700;
-            text-align: center;
+            font-size: 1.5rem;
         }
+    }
+</style>
 
-        .chart-container {
-            position: relative;
-            height: 290px;
-        }
+{% endblock %}
 
-        /* Подвал */
 
-        .site-footer {
-            margin-top: auto;
-            padding: 25px 0;
-            background-color: #EFECE4;
-            border-top: 1px solid #DCD5C7;
-            color: #39342F;
-        }
+{% block header %}
 
-        .footer-name {
-            margin-bottom: 5px;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
+<header class="site-header">
 
-        .footer-copy {
-            margin: 0;
-            color: #746F67;
-            font-size: 0.85rem;
-        }
+    <div class="container">
 
-        @media (max-width: 576px) {
-            .site-header h1 {
-                font-size: 2.2rem;
-            }
+        <h1>СТАРЫЕ СТАРОСТИ</h1>
 
-            .page-title {
-                font-size: 2.2rem;
-            }
+        <p>Авторские материалы и тематические истории</p>
 
-            .chart-card {
-                padding: 16px;
-            }
+    </div>
 
-            .chart-card h5 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
-</head>
+</header>
 
-<body class="d-flex flex-column min-vh-100">
+{% endblock %}
 
-    <!-- Шапка сайта -->
 
-    <header class="site-header">
-        <div class="container">
-            <h1>СТАРЫЕ СТАРОСТИ</h1>
-            <p>Авторские материалы и тематические истории</p>
-        </div>
-    </header>
+{% block navigation %}
 
-    <!-- Навигация -->
+<nav class="site-nav">
 
-    <nav class="site-nav">
-        <div class="container">
-            <a href="/" class="nav-link">Главная</a>
-        </div>
-    </nav>
+    <div class="container">
 
-    <!-- Основное содержимое -->
+        <a href="/" class="nav-link">Главная</a>
 
-    <main class="container py-4 mb-5">
+    </div>
 
-        <h2 class="page-title">Статистика публикаций</h2>
+</nav>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="statistics-main">
+
+    <div class="container py-4 mb-5">
+
+        <h2 class="page-title">
+            Статистика публикаций
+        </h2>
 
         <p class="page-description">
             Анализ публикационной активности онлайн-издания
         </p>
+
 
         <div class="row g-4">
 
             <!-- Публикации по категориям -->
 
             <div class="col-lg-6">
+
                 <div class="chart-card">
 
                     <h5>Публикации по категориям</h5>
@@ -233,11 +241,14 @@
                     </div>
 
                 </div>
+
             </div>
+
 
             <!-- Публикации по авторам -->
 
             <div class="col-lg-6">
+
                 <div class="chart-card">
 
                     <h5>Публикации по авторам</h5>
@@ -247,11 +258,14 @@
                     </div>
 
                 </div>
+
             </div>
+
 
             <!-- Динамика создания публикаций -->
 
             <div class="col-lg-6">
+
                 <div class="chart-card">
 
                     <h5>Динамика создания публикаций</h5>
@@ -261,11 +275,14 @@
                     </div>
 
                 </div>
+
             </div>
+
 
             <!-- Публикации по статусам -->
 
             <div class="col-lg-6">
+
                 <div class="chart-card">
 
                     <h5>Публикации по статусам</h5>
@@ -275,330 +292,348 @@
                     </div>
 
                 </div>
+
             </div>
 
         </div>
 
-    </main>
+    </div>
 
-    <!-- Подвал сайта -->
+</div>
 
-    <footer class="site-footer">
-        <div class="container text-center">
-
-            <p class="footer-name">СТАРЫЕ СТАРОСТИ</p>
-
-            <p class="footer-copy">
-                © Онлайн-издание. Все права защищены.
-            </p>
-
-        </div>
-    </footer>
-
-    <!-- Данные Django -->
-
-    {{ categories|json_script:"categories-data" }}
-    {{ authors|json_script:"authors-data" }}
-    {{ dates|json_script:"dates-data" }}
-    {{ statuses|json_script:"statuses-data" }}
-
-    <!-- Настройка диаграмм -->
-
-    <script>
-        const categories = JSON.parse(
-            document.getElementById('categories-data').textContent
-        );
-
-        const authors = JSON.parse(
-            document.getElementById('authors-data').textContent
-        );
-
-        const dates = JSON.parse(
-            document.getElementById('dates-data').textContent
-        );
-
-        const statuses = JSON.parse(
-            document.getElementById('statuses-data').textContent
-        );
+{% endblock %}
 
 
-        // Общие настройки шрифтов Chart.js
+{% block footer %}
 
-        Chart.defaults.font.family = "'PT Sans', sans-serif";
-        Chart.defaults.color = '#524E48';
+<footer class="site-footer">
 
-        Chart.defaults.plugins.legend.labels.font = {
-            family: "'PT Sans', sans-serif",
-            size: 12
-        };
+    <div class="container text-center">
 
+        <p class="footer-name">
+            СТАРЫЕ СТАРОСТИ
+        </p>
 
-        // Цветовая палитра категорий
+        <p class="footer-copy">
+            © Онлайн-издание. Все права защищены.
+        </p>
 
-        const categoryColors = [
-            '#802520',
-            '#A84A3A',
-            '#C28B4E',
-            '#C9A96E',
-            '#6E7A5B',
-            '#5B707A',
-            '#3A3F47',
-            '#8C857B',
-            '#D4C5AE',
-            '#54382E'
-        ];
+    </div>
+
+</footer>
+
+{% endblock %}
 
 
-        // Диаграмма публикаций по категориям
+{% block extra_js %}
 
-        new Chart(document.getElementById('categoriesChart'), {
-            type: 'pie',
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-            data: {
-                labels: categories.map(
-                    item => item.category__category_name
-                ),
 
-                datasets: [{
-                    data: categories.map(item => item.total),
+<!-- Данные Django -->
 
-                    backgroundColor: categoryColors,
+{{ categories|json_script:"categories-data" }}
+{{ authors|json_script:"authors-data" }}
+{{ dates|json_script:"dates-data" }}
+{{ statuses|json_script:"statuses-data" }}
 
-                    borderColor: '#FCFAF5',
-                    borderWidth: 2
-                }]
-            },
 
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
+<!-- Настройка диаграмм -->
 
-                plugins: {
-                    legend: {
-                        position: 'bottom',
+<script>
+    const categories = JSON.parse(
+        document.getElementById('categories-data').textContent
+    );
 
-                        labels: {
-                            color: '#524E48',
+    const authors = JSON.parse(
+        document.getElementById('authors-data').textContent
+    );
 
-                            boxWidth: 12,
-                            padding: 10,
+    const dates = JSON.parse(
+        document.getElementById('dates-data').textContent
+    );
 
-                            font: {
-                                family: "'PT Sans', sans-serif",
-                                size: 12
-                            }
+    const statuses = JSON.parse(
+        document.getElementById('statuses-data').textContent
+    );
+
+
+    // Общие настройки шрифтов Chart.js
+
+    Chart.defaults.font.family = "'PT Sans', sans-serif";
+    Chart.defaults.color = '#524E48';
+
+    Chart.defaults.plugins.legend.labels.font = {
+        family: "'PT Sans', sans-serif",
+        size: 12
+    };
+
+
+    // Цветовая палитра категорий
+
+    const categoryColors = [
+        '#802520',
+        '#A84A3A',
+        '#C28B4E',
+        '#C9A96E',
+        '#6E7A5B',
+        '#5B707A',
+        '#3A3F47',
+        '#8C857B',
+        '#D4C5AE',
+        '#54382E'
+    ];
+
+
+    // Диаграмма публикаций по категориям
+
+    new Chart(document.getElementById('categoriesChart'), {
+        type: 'pie',
+
+        data: {
+            labels: categories.map(
+                item => item.category__category_name
+            ),
+
+            datasets: [{
+                data: categories.map(item => item.total),
+
+                backgroundColor: categoryColors,
+
+                borderColor: '#FCFAF5',
+                borderWidth: 2
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    position: 'bottom',
+
+                    labels: {
+                        color: '#524E48',
+
+                        boxWidth: 12,
+                        padding: 10,
+
+                        font: {
+                            family: "'PT Sans', sans-serif",
+                            size: 12
                         }
                     }
                 }
             }
-        });
+        }
+    });
 
 
-        // Диаграмма публикаций по авторам
+    // Диаграмма публикаций по авторам
 
-        new Chart(document.getElementById('authorsChart'), {
-            type: 'bar',
+    new Chart(document.getElementById('authorsChart'), {
+        type: 'bar',
 
-            data: {
-                labels: authors.map(
-                    item => item.author__first_name + ' ' +
-                            item.author__last_name
-                ),
+        data: {
+            labels: authors.map(
+                item => item.author__first_name + ' ' +
+                        item.author__last_name
+            ),
 
-                datasets: [{
-                    label: 'Количество публикаций',
+            datasets: [{
+                label: 'Количество публикаций',
 
-                    data: authors.map(item => item.total),
+                data: authors.map(item => item.total),
 
-                    backgroundColor: '#802520',
+                backgroundColor: '#802520',
 
-                    borderRadius: 3
-                }]
-            },
+                borderRadius: 3
+            }]
+        },
 
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
 
-                indexAxis: 'y',
+            indexAxis: 'y',
 
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#524E48',
-                            font: {
-                                family: "'PT Sans', sans-serif"
-                            }
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#524E48',
+                        font: {
+                            family: "'PT Sans', sans-serif"
                         }
                     }
-                },
+                }
+            },
 
-                scales: {
-                    x: {
-                        beginAtZero: true,
+            scales: {
+                x: {
+                    beginAtZero: true,
 
-                        ticks: {
-                            precision: 0,
-                            color: '#524E48',
+                    ticks: {
+                        precision: 0,
+                        color: '#524E48',
 
-                            font: {
-                                family: "'PT Sans', sans-serif"
-                            }
-                        },
-
-                        grid: {
-                            color: '#EAE4D7'
+                        font: {
+                            family: "'PT Sans', sans-serif"
                         }
                     },
 
-                    y: {
-                        ticks: {
-                            color: '#524E48',
-
-                            font: {
-                                family: "'PT Sans', sans-serif"
-                            }
-                        },
-
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
-
-
-        // Динамика создания публикаций
-
-        new Chart(document.getElementById('datesChart'), {
-            type: 'line',
-
-            data: {
-                labels: dates.map(item => item.day),
-
-                datasets: [{
-                    label: 'Количество публикаций',
-
-                    data: dates.map(item => item.total),
-
-                    borderColor: '#802520',
-                    borderWidth: 2.5,
-
-                    backgroundColor: 'rgba(128, 37, 32, 0.08)',
-
-                    pointBackgroundColor: '#FCFAF5',
-                    pointBorderColor: '#802520',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-
-                    tension: 0.3,
-
-                    fill: true
-                }]
-            },
-
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#524E48',
-
-                            font: {
-                                family: "'PT Sans', sans-serif"
-                            }
-                        }
+                    grid: {
+                        color: '#EAE4D7'
                     }
                 },
 
-                scales: {
-                    x: {
-                        ticks: {
-                            color: '#524E48',
+                y: {
+                    ticks: {
+                        color: '#524E48',
 
-                            font: {
-                                family: "'PT Sans', sans-serif"
-                            }
-                        },
-
-                        grid: {
-                            color: '#EAE4D7'
+                        font: {
+                            family: "'PT Sans', sans-serif"
                         }
                     },
 
-                    y: {
-                        beginAtZero: true,
-
-                        ticks: {
-                            precision: 0,
-                            color: '#524E48',
-
-                            font: {
-                                family: "'PT Sans', sans-serif"
-                            }
-                        },
-
-                        grid: {
-                            color: '#EAE4D7'
-                        }
+                    grid: {
+                        display: false
                     }
                 }
             }
-        });
+        }
+    });
 
 
-        // Диаграмма публикаций по статусам
+    // Динамика создания публикаций
 
-        new Chart(document.getElementById('statusesChart'), {
-            type: 'doughnut',
+    new Chart(document.getElementById('datesChart'), {
+        type: 'line',
 
-            data: {
-                labels: statuses.map(item => item.status),
+        data: {
+            labels: dates.map(item => item.day),
 
-                datasets: [{
-                    data: statuses.map(item => item.total),
+            datasets: [{
+                label: 'Количество публикаций',
 
-                    backgroundColor: [
-                        '#262522',
-                        '#802520',
-                        '#C28B4E',
-                        '#A39C90'
-                    ],
+                data: dates.map(item => item.total),
 
-                    borderColor: '#FCFAF5',
-                    borderWidth: 2
-                }]
+                borderColor: '#802520',
+                borderWidth: 2.5,
+
+                backgroundColor: 'rgba(128, 37, 32, 0.08)',
+
+                pointBackgroundColor: '#FCFAF5',
+                pointBorderColor: '#802520',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+
+                tension: 0.3,
+
+                fill: true
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#524E48',
+
+                        font: {
+                            family: "'PT Sans', sans-serif"
+                        }
+                    }
+                }
             },
 
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#524E48',
 
-                plugins: {
-                    legend: {
-                        position: 'bottom',
+                        font: {
+                            family: "'PT Sans', sans-serif"
+                        }
+                    },
 
-                        labels: {
-                            color: '#524E48',
+                    grid: {
+                        color: '#EAE4D7'
+                    }
+                },
 
-                            boxWidth: 12,
-                            padding: 12,
+                y: {
+                    beginAtZero: true,
 
-                            font: {
-                                family: "'PT Sans', sans-serif",
-                                size: 12
-                            }
+                    ticks: {
+                        precision: 0,
+                        color: '#524E48',
+
+                        font: {
+                            family: "'PT Sans', sans-serif"
+                        }
+                    },
+
+                    grid: {
+                        color: '#EAE4D7'
+                    }
+                }
+            }
+        }
+    });
+
+
+    // Диаграмма публикаций по статусам
+
+    new Chart(document.getElementById('statusesChart'), {
+        type: 'doughnut',
+
+        data: {
+            labels: statuses.map(item => item.status),
+
+            datasets: [{
+                data: statuses.map(item => item.total),
+
+                backgroundColor: [
+                    '#262522',
+                    '#802520',
+                    '#C28B4E',
+                    '#A39C90'
+                ],
+
+                borderColor: '#FCFAF5',
+                borderWidth: 2
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    position: 'bottom',
+
+                    labels: {
+                        color: '#524E48',
+
+                        boxWidth: 12,
+                        padding: 12,
+
+                        font: {
+                            family: "'PT Sans', sans-serif",
+                            size: 12
                         }
                     }
                 }
             }
-        });
+        }
+    });
 
-    </script>
+</script>
 
-</body>
-</html>
+{% endblock %}

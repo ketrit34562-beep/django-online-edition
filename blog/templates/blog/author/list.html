@@ -1,98 +1,100 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends "blog/base.html" %}
 
-    <title>Авторы — Старые старости</title>
+{% block title %}Авторы — Старые старости{% endblock %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap"
-          rel="stylesheet">
+{% block extra_css %}
 
-    <style>
-    :root{
-        --paper:#F7F4EB;
-        --paper-card:#FFFEFB;
-        --ink:#222222;
-        --muted:#746F67;
-        --accent:#802520;
-        --accent-dark:#651B18;
-        --line:#DED7CA;
-        --soft:#EEE5DC;
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap"
+      rel="stylesheet">
+
+<style>
+    :root {
+        --paper: #F7F4EB;
+        --paper-card: #FFFEFB;
+        --ink: #222222;
+        --muted: #746F67;
+        --accent: #802520;
+        --accent-dark: #651B18;
+        --line: #DED7CA;
+        --soft: #EEE5DC;
     }
 
-    body{
-        background:var(--paper);
-        color:var(--ink);
-        font-family:"PT Sans", Arial, sans-serif;
-        min-height:100vh;
-        display:flex;
-        flex-direction:column;
+    body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "PT Sans", Arial, sans-serif;
     }
 
-    .site-header{
-        background:#1E2229;
-        color:#F9F7F2;
-        padding:38px 0 32px;
-        border-bottom:3px double #D5CEC0;
+    /* Шапка */
+
+    .site-header {
+        background: #1E2229;
+        color: #F9F7F2;
+        padding: 38px 0 32px;
+        border-bottom: 3px double #D5CEC0;
     }
 
-    .site-title{
-        font-family:Georgia,"Times New Roman",serif;
-        font-weight:700;
+    .site-header h1.site-title {
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 700;
     }
 
-    .site-subtitle{
-        color:#D8D1C6;
-        font-family:Georgia,"Times New Roman",serif;
+    .site-subtitle {
+        color: #D8D1C6;
+        font-family: Georgia, "Times New Roman", serif;
     }
 
-    .navbar{
-        background:rgba(249,247,242,.97)!important;
-        border-bottom:1px solid var(--line);
-        box-shadow:0 2px 10px rgba(45,35,25,.05);
+    /* Навигация */
+
+    .navbar {
+        background: rgba(249, 247, 242, .97) !important;
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 2px 10px rgba(45, 35, 25, .05);
     }
 
-    .navbar .nav-link{
-        color:#39342F!important;
-        font-weight:600;
-        padding:8px 13px;
-        border-radius:5px;
-        transition:.2s;
+    .navbar .nav-link {
+        color: #39342F !important;
+        font-weight: 600;
+        padding: 8px 13px;
+        border-radius: 5px;
+        transition: .2s;
     }
 
-    .navbar .nav-link:hover{
-        background:var(--soft);
-        color:var(--accent)!important;
+    .navbar .nav-link:hover {
+        background: var(--soft);
+        color: var(--accent) !important;
     }
 
-    .navbar .nav-link.active{
-        color:var(--accent)!important;
-        font-weight:700;
-        box-shadow:inset 0 -2px 0 var(--accent);
-        border-radius:0;
+    .navbar .nav-link.active {
+        color: var(--accent) !important;
+        font-weight: 700;
+        box-shadow: inset 0 -2px 0 var(--accent);
+        border-radius: 0;
     }
 
-    .authors-title{
-        font-family:"Cormorant Garamond",serif;
-        font-size:3rem;
-        font-weight:700;
-        margin-bottom:2rem;
+    /* Заголовок страницы */
+
+    .authors-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
     }
 
-    .author-card{
-        background:var(--paper-card);
-        border:1px solid var(--line);
-        border-radius:7px;
-        overflow:hidden;
+    /* Карточки авторов */
 
-        height:100%;
-        display:flex;
-        flex-direction:column;
+    .author-card {
+        background: var(--paper-card);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        overflow: hidden;
 
-        transition:transform .2s ease, box-shadow .2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        transition: transform .2s ease, box-shadow .2s ease;
     }
 
     .author-card .card-body,
@@ -103,93 +105,96 @@
         flex-grow: 1;
     }
 
-    .author-card:hover{
-        transform:translateY(-3px);
-        box-shadow:0 9px 24px rgba(48,37,26,.09);
+    .author-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 9px 24px rgba(48, 37, 26, .09);
     }
 
-    .author-image-wrapper{
-        height:260px;
-        overflow:hidden;
-        background:#E9E1D5;
+    .author-image-wrapper {
+        height: 260px;
+        overflow: hidden;
+        background: #E9E1D5;
     }
 
-    .author-image{
-        width:100%;
-        height:100%;
-        object-fit:cover;
+    .author-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         object-position: center 28%;
-        display:block;
+        display: block;
     }
 
-    .author-name{
-        font-family:Georgia,"Times New Roman",serif;
-        font-size:1.35rem;
-        font-weight:700;
-        margin-bottom:15px;
+    .author-name {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin-bottom: 15px;
     }
 
-    .author-bio{
-        font-family:"PT Serif",Georgia,serif;
-        color:#625B53;
-        line-height:1.6;
+    .author-bio {
+        font-family: "PT Serif", Georgia, serif;
+        color: #625B53;
+        line-height: 1.6;
 
-        display:-webkit-box;
-        -webkit-box-orient:vertical;
-        -webkit-line-clamp:3;
-        overflow:hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
     }
 
-    .author-link{
-        margin-top:auto;
+    .author-link {
+        margin-top: auto;
+        display: inline-block;
+        padding: 8px 14px;
 
-        display:inline-block;
+        border: 1px solid #802520;
+        border-radius: 4px;
 
-        padding:8px 14px;
+        color: #802520;
+        text-decoration: none;
+        font-weight: 600;
 
-        border:1px solid #802520;
-        border-radius:4px;
-
-        color:#802520;
-        text-decoration:none;
-        font-weight:600;
-
-        transition:.2s;
+        transition: .2s;
     }
 
-    .author-link:hover{
-        background:#802520;
-        color:#F7F4EB;
+    .author-link:hover {
+        background: #802520;
+        color: #F7F4EB;
     }
 
-    footer{
-        margin-top:auto;
-        background:#EFECE4;
-        border-top:1px solid #DCD5C7;
+    /* Подвал */
+
+    footer {
+        margin-top: auto;
+        background: #EFECE4;
+        border-top: 1px solid #DCD5C7;
     }
 
-    footer .text-secondary{
-        color:#746F67!important;
+    footer .text-secondary {
+        color: #746F67 !important;
     }
 
-    @media(max-width:767.98px){
+    /* Адаптация */
 
-        .authors-title{
-            font-size:2.3rem;
+    @media (max-width: 767.98px) {
+        .authors-title {
+            font-size: 2.3rem;
         }
 
-        .author-image-wrapper{
-            height:220px;
+        .author-image-wrapper {
+            height: 220px;
         }
-
     }
-    </style>
-</head>
+</style>
 
-<body>
+{% endblock %}
+
+
+{% block header %}
 
 <header class="site-header">
     <div class="container">
+
         <h1 class="display-5 site-title mb-2">
             СТАРЫЕ СТАРОСТИ
         </h1>
@@ -197,8 +202,14 @@
         <p class="lead site-subtitle mb-0">
             Авторские материалы и тематические истории
         </p>
+
     </div>
 </header>
+
+{% endblock %}
+
+
+{% block navigation %}
 
 <nav class="navbar navbar-expand-md sticky-top">
     <div class="container">
@@ -207,7 +218,9 @@
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#mainNavbar">
+
             <span class="navbar-toggler-icon"></span>
+
         </button>
 
         <div class="collapse navbar-collapse" id="mainNavbar">
@@ -221,12 +234,11 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{% url 'author_list' %}" class="nav-link active">
+                    <a href="{% url 'author_list' %}"
+                       class="nav-link active">
                         Авторы
                     </a>
                 </li>
-
-
 
             </ul>
 
@@ -234,7 +246,12 @@
     </div>
 </nav>
 
-<main class="container py-5 flex-grow-1">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5 flex-grow-1">
 
     <h2 class="authors-title">
         Авторы
@@ -249,11 +266,15 @@
             <article class="author-card">
 
                 {% if author.photo %}
+
                 <div class="author-image-wrapper">
+
                     <img src="{{ author.photo.url }}"
                          alt="{{ author.first_name }} {{ author.last_name }}"
                          class="author-image">
+
                 </div>
+
                 {% endif %}
 
                 <div class="card-body d-flex flex-column">
@@ -281,18 +302,26 @@
         {% empty %}
 
         <div class="col-12">
+
             <div class="alert alert-info">
                 Авторы пока не добавлены.
             </div>
+
         </div>
 
         {% endfor %}
 
     </div>
 
-</main>
+</div>
+
+{% endblock %}
+
+
+{% block footer %}
 
 <footer class="py-4">
+
     <div class="container text-center">
 
         <p class="mb-1 fw-bold">
@@ -304,8 +333,7 @@
         </p>
 
     </div>
+
 </footer>
 
-
-</body>
-</html>
+{% endblock %}

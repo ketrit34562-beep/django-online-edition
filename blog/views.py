@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models.functions import TruncDate
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Max
 from django.core.paginator import Paginator
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
+from  django.contrib.auth import login, logout, authenticate
 from .models import (
     Article,
     Category,
@@ -13,15 +13,49 @@ from .models import (
     ArticleTag,
 )
 from .forms import ArticleForm, CommentForm, RegistrationForm, LoginForm
+import hashlib
+from django.contrib.auth.models import User as AuthUser
+from django.contrib.auth.hashers import check_password
+from .models import User as BlogUser, Role
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+from django.contrib.auth.decorators import user_passes_test
+
+def is_editorial_staff(user):
+    if not user.is_authenticated:
+        return False
+    blog_user = (
+        BlogUser.objects
+        .select_related('role')
+        .filter(username=user.username)
+        .first()
+    )
+    return bool(
+        blog_user
+        and blog_user.role
+        and blog_user.role.role_name in ['Администратор', 'Редактор', 'Писатель']
+    )
+
+def is_superuser_check(user):
+    return user.is_authenticated and user.is_superuser
 
 
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Регистрация прошла успешно!')
+            blog_user = form.save()
+
+            auth_user, _ = AuthUser.objects.get_or_create(
+                username=blog_user.username,
+                defaults={'email': blog_user.email}
+            )
+            auth_user.is_active = True
+            auth_user.is_staff = False
+            auth_user.is_superuser = False
+            auth_user.save()
+
+            login(request, auth_user)
             return redirect('post_list')
     else:
         form = RegistrationForm()
@@ -32,21 +66,46 @@ def register(request):
     )
 
 
+
+def verify_password(raw_password, stored_hash):
+    if not stored_hash:
+        return False
+    if stored_hash.startswith('pbkdf2_'):
+        return check_password(raw_password, stored_hash)
+    sha256_hash = hashlib.sha256(raw_password.encode('utf-8')).hexdigest()
+    return sha256_hash == stored_hash
+
+
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = authenticate(
-                request,
-                username=username,
-                password=password
+
+            # Ищем пользователя в вашей таблице USERS и проверяем хеш
+            blog_user = (
+                BlogUser.objects
+                .select_related('role')
+                .filter(username=username, is_active=True)
+                .first()
             )
-            if user is not None:
-                login(request, user)
-                messages.success(request, 'Вы успешно вошли в систему!')
+
+            if blog_user and verify_password(password, blog_user.password_hash):
+                # Создаём только техническую сессию для сайта (без доступа к /admin/)
+                auth_user, _ = AuthUser.objects.get_or_create(
+                    username=blog_user.username,
+                    defaults={'email': blog_user.email}
+                )
+                auth_user.is_active = True
+                auth_user.is_staff = False      # <-- Закрываем доступ в системную админку /admin/
+                auth_user.is_superuser = False  # <-- Все права берём только из вашей таблицы USERS
+                auth_user.save()
+
+                login(request, auth_user)
+
                 return redirect('post_list')
+
             messages.error(request, 'Неверное имя пользователя или пароль.')
     else:
         form = LoginForm()
@@ -55,7 +114,6 @@ def user_login(request):
         'blog/registration/login.html',
         {'form': form}
     )
-
 
 def user_logout(request):
     logout(request)
@@ -68,20 +126,39 @@ def post_list(request):
     category_id = request.GET.get('category')
     tag_id = request.GET.get('tag')
 
-    articles = (
-        Article.objects
-        .filter(editorialreview__decision='Опубликовать')
-        .select_related('author', 'category')
-        .prefetch_related('tags', 'image_set')
-        .distinct()
-    )
+    if request.user.is_superuser:
+        articles = (
+            Article.objects
+            .exclude(category__isnull=True)
+            .select_related('author', 'category')
+            .prefetch_related('tags', 'image_set')
+            .distinct()
+        )
+    else:
+        articles = (
+            Article.objects
+            .filter(editorialreview__decision='Опубликовать')
+            .exclude(category__isnull=True)
+            .select_related('author', 'category')
+            .prefetch_related('tags', 'image_set')
+            .distinct()
+        )
 
     if category_id:
         articles = articles.filter(category_id=category_id)
     if tag_id:
         articles = articles.filter(tags__tag_id=tag_id)
     if query:
-        articles = articles.filter(title__icontains=query)
+        articles = articles.filter(
+            Q(title__icontains=query) |
+            Q(short_description__icontains=query)
+        )
+
+    archive_stats = articles.aggregate(
+        total_articles=Count('article_id', distinct=True),
+        total_authors=Count('author_id', distinct=True),
+        last_published=Max('published_at')
+    )
 
     articles = articles.order_by('-published_at')
 
@@ -110,10 +187,11 @@ def post_list(request):
             'other_categories': other_categories,
             'category_id': category_id,
             'tag_id': tag_id,
+            'archive_stats': archive_stats,
         }
     )
 
-
+@user_passes_test(is_editorial_staff, login_url='login')
 def article_detail(request, article_id):
     queryset = (
         Article.objects
@@ -174,11 +252,15 @@ def article_detail(request, article_id):
         }
     )
 
-
+@user_passes_test(is_editorial_staff, login_url='login')
 def statistics(request):
-    published_articles = Article.objects.filter(
-        editorialreview__decision='Опубликовать'
-    ).distinct()
+    published_articles = (
+        Article.objects
+        .filter(editorialreview__decision='Опубликовать')
+        .exclude(editorialreview__decision__in=['Отклонить', 'На доработку'])
+        .exclude(category__isnull=True)
+        .distinct()
+    )
 
     categories = (
         published_articles
@@ -220,7 +302,7 @@ def statistics(request):
         context
     )
 
-
+@user_passes_test(is_editorial_staff, login_url='login')
 def article_create(request):
     if request.method == 'POST':
         form = ArticleForm(request.POST)
@@ -246,7 +328,7 @@ def article_create(request):
         }
     )
 
-
+@login_required(login_url='user_login')
 def article_manage(request):
     articles = (
         Article.objects
@@ -259,7 +341,7 @@ def article_manage(request):
         {'articles': articles}
     )
 
-
+@user_passes_test(is_editorial_staff, login_url='login')
 def article_edit(request, article_id):
     article = get_object_or_404(Article, article_id=article_id)
     if request.method == 'POST':
@@ -287,7 +369,7 @@ def article_edit(request, article_id):
         }
     )
 
-
+@user_passes_test(is_editorial_staff, login_url='login')
 def article_delete(request, article_id):
     article = get_object_or_404(Article, article_id=article_id)
     if request.method == 'POST':

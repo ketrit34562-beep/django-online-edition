@@ -33,7 +33,7 @@ def is_editorial_staff(user):
     return bool(
         blog_user
         and blog_user.role
-        and blog_user.role.role_name in ['Администратор', 'Редактор', 'Писатель']
+        and blog_user.role.role_name in ['Администратор', 'Редактор', 'Автор']
     )
 
 def is_superuser_check(user):
@@ -191,7 +191,7 @@ def post_list(request):
         }
     )
 
-@user_passes_test(is_editorial_staff, login_url='login')
+
 def article_detail(request, article_id):
     queryset = (
         Article.objects
@@ -212,14 +212,21 @@ def article_detail(request, article_id):
     )
 
     if request.method == 'POST':
+        # Оставлять комментарии может ТОЛЬКО зарегистрированный пользователь
+        if not request.user.is_authenticated:
+            messages.error(request, 'Чтобы оставить комментарий, необходимо войти в аккаунт.')
+            return redirect('login')
+
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.article = article
-            comment.status = 'На проверке'
-            comment.save()
-            messages.success(request, 'Комментарий отправлен на проверку.')
-            return redirect('article_detail', article_id=article.article_id)
+            blog_user = BlogUser.objects.filter(username=request.user.username).first()
+            if blog_user:
+                comment = comment_form.save(commit=False)
+                comment.article = article
+                comment.user = blog_user          # Автоматически ставим текущего пользователя
+                comment.status = 'Одобрен'        # Автоматически одобряем комментарий
+                comment.save()
+                return redirect('article_detail', article_id=article.article_id)
 
     related_articles = (
         Article.objects
@@ -235,7 +242,7 @@ def article_detail(request, article_id):
     comments = (
         Comment.objects
         .filter(article=article)
-        .exclude(status='На проверке')
+        .exclude(status__in=['На проверке', 'Отклонено'])
         .select_related('user')
         .order_by('created_at')
     )
@@ -251,6 +258,7 @@ def article_detail(request, article_id):
             'editorial_review': editorial_review,
         }
     )
+
 
 @user_passes_test(is_editorial_staff, login_url='login')
 def statistics(request):

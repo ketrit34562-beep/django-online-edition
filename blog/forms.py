@@ -8,31 +8,19 @@ from .models import Article, Comment, User, Role, Author
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['user', 'comment_text']
+        fields = ['comment_text']
         labels = {
-            'user': 'Ваше имя пользователя',
-            'comment_text': 'Текст комментария',
+            'comment_text': 'Комментарий',
         }
         widgets = {
-            'comment_text': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 4,
-                'placeholder': 'Напишите свой комментарий...'
-            }),
-            'user': forms.Select(attrs={
-                'class': 'form-select'
-            }),
+            'comment_text': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 3,
+                    'placeholder': 'Напишите ваш комментарий...'
+                }
+            ),
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields['user'].queryset = User.objects.filter(
-            role__role_name='Читатель',
-            is_active=True
-        )
-
-        self.fields['user'].empty_label = 'Выберите автора...'
 
 
 class RegistrationForm(forms.ModelForm):

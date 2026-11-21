@@ -628,7 +628,7 @@
     {% endif %}
 
 
-    <section class="comments-section">
+            <section class="comments-section">
 
         <h2 class="section-heading">
             Комментарии
@@ -668,40 +668,48 @@
             Оставить комментарий
         </h3>
 
+        {% if user.is_authenticated %}
 
-        <form method="post" class="comment-form">
+            <p class="mb-3" style="color: #6b6359; font-size: 0.9rem;">
+                Комментарий будет опубликован от имени: <strong style="color: #7f1d1d;">{{ user.username }}</strong>
+            </p>
 
-            {% csrf_token %}
+            <form method="post" class="comment-form">
 
-            <div class="mb-3">
+                {% csrf_token %}
 
-                <label for="{{ comment_form.user.id_for_label }}">
-                    Выберите автора комментария
-                </label>
+                <div class="mb-3">
 
-                {{ comment_form.user }}
+                    <label for="{{ comment_form.comment_text.id_for_label }}">
+                        Комментарий
+                    </label>
 
+                    {{ comment_form.comment_text }}
+
+                </div>
+
+                <button type="submit" class="btn-editorial">
+                    Отправить комментарий
+                </button>
+
+            </form>
+
+        {% else %}
+
+            <div class="comment-card" style="border-left: 3px solid #7f1d1d; background-color: #faf8f5;">
+                <p class="mb-0" style="color: #4a453e; font-size: 0.95rem;">
+                    Оставлять комментарии могут только зарегистрированные читатели.
+                    <a href="{% url 'login' %}" style="color: #7f1d1d; font-weight: 600; text-decoration: none;">Войдите</a>
+                    или
+                    <a href="{% url 'register' %}" style="color: #7f1d1d; font-weight: 600; text-decoration: none;">зарегистрируйтесь</a>,
+                    чтобы присоединиться к обсуждению.
+                </p>
             </div>
 
-
-            <div class="mb-3">
-
-                <label for="{{ comment_form.comment_text.id_for_label }}">
-                    Комментарий
-                </label>
-
-                {{ comment_form.comment_text }}
-
-            </div>
-
-
-            <button type="submit" class="btn-editorial">
-                Отправить комментарий
-            </button>
-
-        </form>
+        {% endif %}
 
     </section>
+
 
 </div>
 
@@ -723,5 +731,25 @@
 
     </div>
 </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. Восстанавливаем позицию прокрутки после отправки комментария
+        const savedScroll = sessionStorage.getItem('articleDetailScrollY');
+        if (savedScroll !== null) {
+            window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
+            sessionStorage.removeItem('articleDetailScrollY');
+        }
+
+        // 2. Запоминаем текущую позицию прокрутки в момент отправки формы комментария
+        const commentForm = document.querySelector('.comment-form');
+        if (commentForm) {
+            commentForm.addEventListener('submit', function () {
+                sessionStorage.setItem('articleDetailScrollY', window.scrollY);
+            });
+        }
+    });
+</script>
+
 
 {% endblock %}
